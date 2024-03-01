@@ -14,11 +14,34 @@
       }
     }
   </script>
+  <script>
+    function slideToolbar(direction) {
+    var toolbar = document.getElementById('ui-toolbar');
+    var toolbarWidth = toolbar.offsetWidth;
+
+    if (direction === 'left') {
+        toolbar.style.transition = "left 0.5s ease";
+        toolbar.style.left = -toolbarWidth + 'px';
+        // Hide the "Slide Left" button when toolbar is slid to the left
+        document.getElementById('slide-left-button').style.display = 'none';
+        // Show the "Slide Right" button when toolbar is slid to the left
+        document.getElementById('slide-right-button').style.display = 'block';
+    } else if (direction === 'right') {
+        toolbar.style.transition = "left 0.5s ease";
+        toolbar.style.left = 0;
+        // Show the "Slide Left" button when toolbar is in default position
+        document.getElementById('slide-left-button').style.display = 'block';
+        // Hide the "Slide Right" button when toolbar is in default position
+        document.getElementById('slide-right-button').style.display = 'none';
+    }
+}
+  </script>
 </head>
 <body>
   <div id="root-window">
     <div id="render-target">
       <div id="ui-toolbar">
+
         <button id='button-select' class="ui-button selected" data-type="select"
           onclick="game.onToolSelected(event)">
           <img class="toolbar-icon" src="./icons/selecionar.png">
@@ -66,7 +89,7 @@
 
       <button id='button-road' class="ui-button10" data-type="road"
           onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/road.png">
+          <img class="toolbar-icon" src="./icons/pagoda.png">
         </button>
 
         <button id='upgradeButton' class="ui-button11" data-type="upgrade"
@@ -81,16 +104,20 @@
 
       </div>
   </div>
+
+  <button id="slide-left-button" onclick="slideToolbar('left')"><img class="toolbar-icon" src="./icons/slideLeft.png"></button>
+  <button id="slide-right-button" onclick="slideToolbar('right')"style="display: none;"><img class="toolbar-icon" src="./icons/slideRight.png"></button>
   
+  <div id="city-name" class="city-name-box" contenteditable="true" spellcheck="false">Nome da Cidade</div>
 
   <div id="info-panel" class="ui-container">
     <h1 id="info-panel-text">Information: </h1>
     <div id="selected-object-info"></div>
   </div>
 
-  <div id="weather-panel" class="ui-container">
+  <div id="weather-panel" class="ui-container1">
     <h1 id="weather-text">Clima: </h1>
-    <div id="selected-object-info"></div>
+    <div id="selected-object-info1"></div>
   </div>
 
   <div id="season-buttons">
@@ -99,6 +126,8 @@
     <button id="sakura-button"><img class="weather-button snow" src="./icons/sakura.png"></button>
     <button id="snowing-button"><img class="weather-button sakura" src="./icons/snow.png"></button>
   </div>
+
+  <button id="rotate-button"><img class="toolbar-icon" src="./icons/rotate.png"></button>
 
   <script type="module">
     import { createGame } from './src/game.js';

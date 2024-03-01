@@ -16,6 +16,7 @@ function loadTexture(url) {
 
 const textures = {
     'grass': loadTexture('./textures/relva.jpg'),
+    'snow': loadTexture('./textures/neve.png'),
 
     'sun': loadTexture('./textures/sun.jpg'),
     'moon': loadTexture('./textures/moon.jpg'),
@@ -46,9 +47,9 @@ const textures = {
     'bench2': loadTexture('./textures/bench.jpg'),
     'bench3': loadTexture('./textures/bench.jpg'),
 
-    'wall1': loadTexture('./textures/edificio3.png'),
-    'wall2': loadTexture('./textures/edificio3.png'),
-    'wall3': loadTexture('./textures/edificio3.png'),
+    'wall1': loadTexture('./textures/edificio1.png'),
+    'wall2': loadTexture('./textures/edificio1.png'),
+    'wall3': loadTexture('./textures/edificio1.png'),
 
     'arcade1': loadTexture('./textures/edificio3.png'),
     'arcade2': loadTexture('./textures/edificio3.png'),
@@ -103,24 +104,35 @@ const assets = {
     mesh.receiveShadow = true;
     return mesh;
   },
-  'home': (x, y, data) => createZoneMesh(x, y, data),
-  'tree': (x, y, data) => createZoneMesh(x, y, data),
-  'vendingMachine': (x, y, data) => createZoneMesh(x, y, data),
-  'windmill': (x, y, data) => createZoneMesh(x, y, data),
-  'torii': (x, y, data) => createZoneMesh(x, y, data),
-  'bench': (x, y, data) => createZoneMesh(x, y, data),
-  'wall': (x, y, data) => createZoneMesh(x, y, data),
-  'arcade': (x, y, data) => createZoneMesh(x, y, data),
 
-  'road': (x, y) => {
-    const material = new THREE.MeshLambertMaterial({ map: textures.road });
+  'snow': (x, y) => {
+    const material = new THREE.MeshLambertMaterial({ map: textures.snow });
     const mesh = new THREE.Mesh(cube, material);
     mesh.userData = { x, y };
-    mesh.scale.set(1, 0.02, 1);
-    mesh.position.set(x, 0.01, y);
+    mesh.position.set(x, -0.5, y);
     mesh.receiveShadow = true;
     return mesh;
-  }
+  },
+
+
+  // 'home': (x, y, data) => createZoneMesh(x, y, data),
+  // 'tree': (x, y, data) => createZoneMesh(x, y, data),
+  // 'vendingMachine': (x, y, data) => createZoneMesh(x, y, data),
+  // 'windmill': (x, y, data) => createZoneMesh(x, y, data),
+  // 'torii': (x, y, data) => createZoneMesh(x, y, data),
+  // 'bench': (x, y, data) => createZoneMesh(x, y, data),
+  'wall': (x, y, data) => createZoneMesh(x, y, data),
+  // 'arcade': (x, y, data) => createZoneMesh(x, y, data),
+
+  // 'road': (x, y) => {
+  //   const material = new THREE.MeshLambertMaterial({ map: textures.road });
+  //   const mesh = new THREE.Mesh(cube, material);
+  //   mesh.userData = { x, y };
+  //   mesh.scale.set(1, 0.02, 1);
+  //   mesh.position.set(x, 0.01, y);
+  //   mesh.receiveShadow = true;
+  //   return mesh;
+  // }
 }
 
 function createZoneMesh(x, y, data) {
@@ -138,7 +150,7 @@ function createZoneMesh(x, y, data) {
   ];
   let mesh = new THREE.Mesh(cube, materialArray);
   mesh.userData = { x, y };
-  mesh.scale.set(0.8, (data.height - 0.95) / 2, 0.8);
+  mesh.scale.set(1, (data.height - 0.95) / 2, 1);
   mesh.material.forEach(material => material.map?.repeat.set(1, data.height - 1));
   mesh.position.set(x, (data.height - 0.95) / 4, y);
   mesh.castShadow = true;

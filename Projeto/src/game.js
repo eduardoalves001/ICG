@@ -8,10 +8,9 @@ window.onload = () => {
 export function createGame() {
   let selectedControl = document.getElementById('button-select');
   let activeToolId = 'select';
-  let isPaused = false;
 
   const scene = createScene();
-  const city = createCity(20);
+  const city = createCity(30);
 
   scene.initialize(city);
 
@@ -27,10 +26,7 @@ export function createGame() {
     scene.update(city);
   }
 
-  function togglePause() {
-    isPaused = !isPaused;
-    document.getElementById('button-pause').innerHTML = isPaused ? 'RESUME' : 'PAUSE';
-  }
+
 
 
   function onMouseDown(event) {
@@ -66,7 +62,7 @@ export function createGame() {
 
   function useActiveTool(object) {
     if (!object || object.userData.ignoreSelection) {
-      updateInfoPanel(null);
+      // updateInfoPanel(null);
       return;
     }
 
@@ -75,7 +71,7 @@ export function createGame() {
 
     if (activeToolId === 'select') {
       scene.setActiveObject(object);
-      updateInfoPanel(tile);
+      // updateInfoPanel(tile);
     } else if (activeToolId === 'bulldoze') {
       bulldoze(tile);
     } else if (!tile.building) {
@@ -87,9 +83,9 @@ export function createGame() {
 
 
   function upgradeBuilding(tile) {
-    if (tile.building && tile.building.type !== 'road') {
-      if (tile.building.height < 5) { // Check if height is less than 5
-        tile.building.height++; // Increase height by 1
+    if (tile.building && tile.building.type == 'wall') {
+      if (tile.building.height < 5) {
+        tile.building.height++;
         tile.building.updated = true;
         scene.update(city);
       } else {
@@ -102,50 +98,50 @@ export function createGame() {
     }
   }
 
-  function updateInfoPanel(tile) {
-    const infoPanel = document.getElementById('selected-object-info');
-    if (tile) {
-      let message;
-      switch (tile.building?.type) {
-        case 'sun':
-          message = `Sun: A shining star of Fire, its light allows our eveyday daylight. It sure is beautiful.`;
-          break;
-        case 'home':
-          message = `House: A good looking house, reminds me of home. I wonder who lives here.`;
-          break;
-        case 'tree':
-          message = `Tree: A normal looking Tree. It looks old, maybe a few centuries old.`;
-          break;
-        case 'vendingMachine':
-          message = `Vending Machine: A vending machine, after a closer look, its filled with snacks.`;
-          break;
-        case 'windmill':
-          message = `Windmill: You can hear the wind blowing around you.`;
-          break;
-        case 'torii':
-          message = `Torii: The japanese entrance to a sacred place. You somehow feel calmer around it.`;
-          break;
-        case 'bench':
-          message = `Bench: Oh nice, a bench, my legs were starting to feel a bit tired.`;
-          break;
-        case 'wall':
-          message = `Wall: A large wall, looks like its still under construction.`;
-          break;
-        case 'arcade':
-          message = `Arcade: The oldschool way of playing games, my father used to play these with his friends back in the day.`;
-          break;
-        case 'road':
-          message = `Road: This is a road tile, used for transportation.`;
-          break;
-        default:
-          message = `Grass: Ah, the scent of freshly cut grass, such a nostalgic embrace.`;
-          break;
-      }
-      infoPanel.innerHTML = message;
-    } else {
-      infoPanel.innerHTML = '';
-    }
-  }
+  // function updateInfoPanel(tile) {
+  //   const infoPanel = document.getElementById('selected-object-info');
+  //   if (tile) {
+  //     let message;
+  //     switch (tile.building?.type) {
+  //       case 'sun':
+  //         message = `Sun: A shining star of Fire, its light allows our eveyday daylight. It sure is beautiful.`;
+  //         break;
+  //       case 'home':
+  //         message = `House: A good looking house, reminds me of home. I wonder who lives here.`;
+  //         break;
+  //       case 'tree':
+  //         message = `Tree: A normal looking Tree. It looks old, maybe a few centuries old.`;
+  //         break;
+  //       case 'vendingMachine':
+  //         message = `Vending Machine: A vending machine, after a closer look, its filled with snacks.`;
+  //         break;
+  //       case 'windmill':
+  //         message = `Windmill: You can hear the wind blowing around you.`;
+  //         break;
+  //       case 'torii':
+  //         message = `Torii: The japanese entrance to a sacred place. You somehow feel calmer around it.`;
+  //         break;
+  //       case 'bench':
+  //         message = `Bench: Oh nice, a bench, my legs were starting to feel a bit tired.`;
+  //         break;
+  //       case 'wall':
+  //         message = `Wall: A large wall, looks like its still under construction.`;
+  //         break;
+  //       case 'arcade':
+  //         message = `Arcade: The oldschool way of playing games, my father used to play these with his friends back in the day.`;
+  //         break;
+  //       case 'road':
+  //         message = `Road: This is a road tile, used for transportation.`;
+  //         break;
+  //       default:
+  //         message = `Grass: Ah, the scent of freshly cut grass, such a nostalgic embrace.`;
+  //         break;
+  //     }
+  //     infoPanel.innerHTML = message;
+  //   } else {
+  //     infoPanel.innerHTML = '';
+  //   }
+  // }
 
   function bulldoze(tile) {
     console.log(activeToolId);
@@ -179,6 +175,5 @@ export function createGame() {
     update,
     onToolSelected,
     upgradeBuilding,
-    togglePause
   };
 }

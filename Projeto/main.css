@@ -473,7 +473,7 @@ h1 {
   transform: translateY(-50%);
   margin-right: 16px; /* Adjust as needed */
   padding: 12px;
-  width: 300px;
+  width: 200px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 20%);
@@ -558,4 +558,87 @@ h1 {
 #rainy-button{
   background-color: rgb(63, 156, 255);
 }
+
+.city-name-box {
+  position: fixed;
+  bottom: 20px; /* Adjust the distance from the bottom */
+  right: 20px; /* Adjust the distance from the right */
+  z-index: 9999; /* Ensure the box is above other content */
+  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
+  padding: 5px; /* Add padding */
+  border-radius: 5px; /* Add border radius */
+  max-width: 200px; /* Set maximum width */
+  overflow-wrap: break-word; /* Allow text to wrap within the box */
+}
+
+#city-name {
+  font-size: 14px; /* Adjust the font size */
+  max-width: 180px; /* Set maximum width for the city name */
+  white-space: nowrap; /* Prevent the city name from wrapping */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+#rotate-button{
+  position: fixed;
+  bottom: 60px; /* Adjust the distance from the bottom */
+  right: 20px; /* Adjust the distance from the right */
+  z-index: 9999; /* Ensure the box is above other content */
+  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
+  padding: 5px; /* Add padding */
+  border-radius: 5px; /* Add border radius */
+  max-width: 200px; /* Set maximum width */
+  overflow-wrap: break-word; /* Allow text to wrap within the box */
+}
+
+#expandRight{
+  position: fixed;
+  bottom: 120px; /* Adjust the distance from the bottom */
+  right: 20px; /* Adjust the distance from the right */
+  z-index: 9999; /* Ensure the box is above other content */
+  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
+  padding: 5px; /* Add padding */
+  border-radius: 5px; /* Add border radius */
+  max-width: 200px; /* Set maximum width */
+  overflow-wrap: break-word; /* Allow text to wrap within the box */
+}
+
+#expandDown{
+  position: fixed;
+  bottom: 160px; /* Adjust the distance from the bottom */
+  right: 20px; /* Adjust the distance from the right */
+  z-index: 9999; /* Ensure the box is above other content */
+  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
+  padding: 5px; /* Add padding */
+  border-radius: 5px; /* Add border radius */
+  max-width: 200px; /* Set maximum width */
+  overflow-wrap: break-word; /* Allow text to wrap within the box */
+}
+
+#slide-right-button{
+  position: fixed;
+  bottom: 1%; /* Adjust the distance from the bottom */
+  left: 1%; /* Adjust the distance from the right */
+  z-index: 9999; /* Ensure the box is above other content */
+  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
+  padding: 5px; /* Add padding */
+  border-radius: 5px; /* Add border radius */
+  max-width: 200px; /* Set maximum width */
+  overflow-wrap: break-word; /* Allow text to wrap within the box */
+}
+
+#slide-left-button{
+  position: fixed;
+  bottom: 1%; /* Adjust the distance from the bottom */
+  left: 5%; /* Adjust the distance from the right */
+  z-index: 9999; /* Ensure the box is above other content */
+  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
+  padding: 5px; /* Add padding */
+  border-radius: 5px; /* Add border radius */
+  max-width: 200px; /* Set maximum width */
+  overflow-wrap: break-word; /* Allow text to wrap within the box */
+}
+
+
+
 
