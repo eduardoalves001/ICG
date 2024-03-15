@@ -468,7 +468,7 @@ h1 {
 #info-panel {
   position: fixed;
   color: black;
-  top: 8%;
+  top: 12%;
   right: 0;
   transform: translateY(-50%);
   margin-right: 16px; /* Adjust as needed */
@@ -561,8 +561,8 @@ h1 {
 
 .city-name-box {
   position: fixed;
-  bottom: 20px; /* Adjust the distance from the bottom */
-  right: 20px; /* Adjust the distance from the right */
+  top: 2%; /* Adjust the distance from the bottom */
+  right: 4.5%; /* Adjust the distance from the right */
   z-index: 9999; /* Ensure the box is above other content */
   background-color: rgba(255, 255, 255, 0.8); /* Add background color */
   padding: 5px; /* Add padding */
@@ -637,6 +637,12 @@ h1 {
   border-radius: 5px; /* Add border radius */
   max-width: 200px; /* Set maximum width */
   overflow-wrap: break-word; /* Allow text to wrap within the box */
+}
+
+#main-menu {
+  position: fixed;
+  bottom: 3%;
+  right: 1%;
 }
 
 

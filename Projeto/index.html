@@ -127,6 +127,17 @@
     <button id="snowing-button"><img class="weather-button sakura" src="./icons/snow.png"></button>
   </div>
 
+  <div id="main-menu">
+    <button id="main-menu-button">Back to Main Menu</button>
+  </div>
+
+  <script>
+    var backButton = document.getElementById('main-menu-button');
+    backButton.addEventListener('click', function() {
+        window.location.href = 'frontpage.html';
+    });
+  </script>
+
   <button id="rotate-button"><img class="toolbar-icon" src="./icons/rotate.png"></button>
 
   <script type="module">

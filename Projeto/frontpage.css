@@ -1,0 +1,74 @@
+body{
+    background-image: url('./textures/sky.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#game-button{
+    position: fixed;
+    color: black;
+    border: 1px solid black;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    width: 200px; /* Adjust width as needed */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 20%);
+}
+
+#observe-button{
+    position: fixed;
+    color: black;
+    border: 1px solid black;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    width: 200px; /* Adjust width as needed */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 20%);
+}
+
+#game-button:hover,
+#observe-button:hover {
+    background-color: #000000;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+#Title{
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.container {
+    background-color: lightcyan;
+    padding-top: 450px; /* Adjust as needed to start the top of the container further down */
+    border-radius: 10px;
+    border: 2px solid black;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin: 5% auto 0; /* Adjust as needed to create space above the container */
+}
+
+.quote-box {
+    background-color: lightcyan;
+    padding: 20px;
+    border-radius: 5px;
+    border: 2px solid black;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 465px;
+    margin: 20px auto 0;
+}
+
+.quote {
+    font-style: italic;
+    text-align: center;
+    margin: 0;
+}

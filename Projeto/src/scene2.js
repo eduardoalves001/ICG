@@ -6,8 +6,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 let rainEffect = null;
 let sakuraEffect = null; 
 let snowEffect = null;
-const occupiedPositions = new Set();
-const loadedModels = new Map();
 
 export function createScene() {
 
@@ -255,6 +253,41 @@ function addStarsToSky() {
     }
 
    
+    loadHouseModel1();
+    loadHouseModel2();
+    loadHouseModel3();
+    loadHouseModel4();
+    loadHouseModel5();
+    loadHouseModel6();
+    loadHouseModel7();
+    loadHouseModel8();
+    loadHouseModel9();
+
+    // loadWall1();
+    // loadWall2();
+    // loadWall3();
+    // loadWall4();
+    // loadWall5();
+    // loadWall6();
+    // loadWall7();
+    loadWalls();
+    
+    
+    load3DPagoda();
+    load3DTree1();
+    load3DTree2();
+    load3DTree3();
+    load3DTree4();
+    load3DTree5();
+    load3DTree6();
+    load3DTree7();
+    load3DTree8();
+    load3DTree9();
+    load3DTorii1();
+    load3DTorii2();
+    load3DTorii3();
+
+
 
     scene.add(sunMesh);
     scene.add(moonMesh);
@@ -268,15 +301,6 @@ function addStarsToSky() {
   // Raining -> Noite
 
   let currentWeather = "Sunny/Moony Season";
-
-function getCurrentWeather() {
-    return currentWeather;
-}
-
-function updateWeatherPanel() {
-    const weatherTextElement = document.getElementById('weather-text');
-    weatherTextElement.textContent = currentWeather;
-}
 
 
 function updateBackground() {
@@ -309,33 +333,8 @@ function updateBackground() {
   }
 }
 
-// Event listeners for weather buttons
-document.getElementById('sunny-button').addEventListener('click', function() {
-    currentWeather = "Sunny/Moony Season";
-    updateWeatherPanel();
-    updateBackground();
-});
 
-document.getElementById('rainy-button').addEventListener('click', function() {
-    currentWeather = "Rainy Season";
-    updateWeatherPanel();
-    updateBackground();
-});
 
-document.getElementById('snowing-button').addEventListener('click', function() {
-    currentWeather = "Snowing Season";
-    updateWeatherPanel();
-    updateBackground();
-});
-
-document.getElementById('sakura-button').addEventListener('click', function() {
-    currentWeather = "Sakura Season";
-    updateWeatherPanel();
-    updateBackground();
-});
-
-// Initial setup
-updateWeatherPanel();
 updateBackground();
 
 
@@ -347,17 +346,7 @@ updateBackground();
 
 
 let selectedPosition = null; // Variable to store the selected position
-let tileSelectionModeEnabled = false;
 
-// Add event listener to the select button
-const selectButton = document.getElementById('button-select');
-selectButton.addEventListener('click', function() {
-  tileSelectionModeEnabled = !tileSelectionModeEnabled;
-  // Enable mode for selecting a tile
-  if (tileSelectionModeEnabled) {
-    enableTileSelectionMode();
-  }
-});
 
 // Function to enable mode for selecting a tile
 function enableTileSelectionMode() {
@@ -393,104 +382,6 @@ function getMouseCoordinates(event) {
     return new THREE.Vector2(x, y);
 }
 
-// Function to disable tile selection mode
-function disableTileSelectionMode() {
-    // Remove the click event listener from the renderer's dom element
-    renderer.domElement.removeEventListener('click', onTileClick);
-}
-
-// Add event listener to the house button
-const houseButtonupload = document.getElementById('button-home');
-houseButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
-    if (selectedPosition) {
-        // Load the house model to the selected position
-        loadHouseModel(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-const treeButtonupload = document.getElementById('button-tree');
-treeButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
-    if (selectedPosition) {
-        // Load the house model to the selected position
-        load3DTree(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-const windMillButtonupload = document.getElementById('button-windmill');
-windMillButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
-    if (selectedPosition) {
-        // Load the house model to the selected position
-        load3DWindMill(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-const toriiButtonupload = document.getElementById('button-torii');
-toriiButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
-    if (selectedPosition) {
-        // Load the house model to the selected position
-        load3DTorii(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-const benchButtonupload = document.getElementById('button-bench');
-benchButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
-    if (selectedPosition) {
-        // Load the house model to the selected position
-        load3DBench(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-const pagodaButtonupload = document.getElementById('button-road');
-pagodaButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
-    if (selectedPosition) {
-        // Load the house model to the selected position
-        load3DPagoda(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-const arcadeButtonupload = document.getElementById('button-arcade');
-arcadeButtonupload.addEventListener('click', function() {
-
-    if (selectedPosition) {
-        load3DArcade(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-const vendingMachineButtonupload = document.getElementById('button-vendingmachine');
-vendingMachineButtonupload.addEventListener('click', function() {
-
-    if (selectedPosition) {
-        load3DVendingMachine(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-function isPositionOccupied(position) {
-  const positionKey = `${position.x},${position.y},${position.z}`;
-  return occupiedPositions.has(positionKey);
-}
-
 
 function updateInformationPanel(customString) {
   const informationPanel = document.getElementById('info-panel');
@@ -501,73 +392,10 @@ function updateInformationPanel(customString) {
   }
 }
 
-const cityNameElement = document.getElementById('city-name');
-
-cityNameElement.addEventListener('input', function() {
-    const newCityName = cityNameElement.textContent.trim();
-    updateCityName(newCityName);
-});
-
-function updateCityName(newCityName) {
-    console.log('City name updated:', newCityName);
-}
 
 
-function deleteModel(position) {
-  const positionKey = `${position.x},${position.y},${position.z}`;
-  const modelToRemove = loadedModels.get(positionKey);
-
-  if (modelToRemove) {
-      scene.remove(modelToRemove);
-      occupiedPositions.delete(positionKey);
-      loadedModels.delete(positionKey);
-      console.log(`Removed model at position: ${positionKey}`);
-  } else {
-      console.log(`No model found at position: ${positionKey}`);
-  }
-}
-
-
-
-function rotateModel(position, angle) {
-  const positionKey = `${position.x},${position.y},${position.z}`;
-  const modelToRotate = loadedModels.get(positionKey);
-
-  if (modelToRotate) {
-    modelToRotate.rotation.y += angle;
-    console.log(`Rotated model at position: ${positionKey}`);
-  } else {
-    console.log(`No model found at position: ${positionKey}`);
-  }
-}
-
-const rotateButton = document.getElementById('rotate-button');
-rotateButton.addEventListener('click', function() {
-    if (selectedPosition) {
-        rotateModel(selectedPosition, Math.PI / 2);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-
-const bulldozeButton = document.getElementById('button-bulldoze');
-bulldozeButton.addEventListener('click', function() {
-    if (selectedPosition) {
-        deleteModel(selectedPosition);
-    } else {
-        console.log('Please select a tile first.');
-    }
-});
-
-
-function loadHouseModel(position) {
-  if (position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('Skipping loading model at position 0,0,0.');
-    return;
-}
+function loadHouseModel1() {
  // Verificação, se a posição já está ocupada antes de carregar o modelo
-  if (!isPositionOccupied(position)) {
       const houseUrl = './modelos/house.glb';
       const gtlloaderHouse = new GLTFLoader();
 
@@ -575,17 +403,9 @@ function loadHouseModel(position) {
           houseUrl,
           function (gltf) {
               const houseModel = gltf.scene;
-              houseModel.position.copy(position);
-              houseModel.scale.set(1.2, 1.2, 1.2);
-              houseModel.position.y = 0;
+              houseModel.scale.set(2, 2, 2);
+              houseModel.position.set(20,0,1.5);
               scene.add(houseModel);
-
-              const positionKey = `${position.x},${position.y},${position.z}`;
-              occupiedPositions.add(positionKey);
-              loadedModels.set(positionKey, houseModel);
-              console.log("Loaded models:", loadedModels);
-              updateInformationPanel("House: A good looking house, reminds me of home. I wonder who lives here.");
-
           },
           function (xhr) {
               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
@@ -594,23 +414,225 @@ function loadHouseModel(position) {
               console.log('An error happened');
           }
       );
-  } else {
-      console.log('This position is already occupied by a model.');
+}
+
+
+function loadHouseModel2() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/house.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const houseModel = gltf.scene;
+               houseModel.scale.set(2, 2, 2);
+               houseModel.position.set(18,0,1.5);
+               scene.add(houseModel);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
+ function loadHouseModel3() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/house.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const houseModel = gltf.scene;
+               houseModel.scale.set(2, 2, 2);
+               houseModel.position.set(16,0,1.5);
+               scene.add(houseModel);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
+ function loadHouseModel4() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/house.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const houseModel = gltf.scene;
+               houseModel.scale.set(2, 2, 2);
+               houseModel.position.set(14,0,1.5);
+               scene.add(houseModel);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
+ function loadHouseModel5() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/house.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const houseModel = gltf.scene;
+               houseModel.scale.set(2, 2, 2);
+               houseModel.position.set(12,0,1.5);
+               scene.add(houseModel);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
+
+ function loadHouseModel6() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/house.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const houseModel = gltf.scene;
+               houseModel.scale.set(2, 2, 2);
+               houseModel.position.set(10,0,1.5);
+               scene.add(houseModel);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
+
+ function loadHouseModel7() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/house.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const houseModel = gltf.scene;
+               houseModel.scale.set(2, 2, 2);
+               houseModel.position.set(8,0,1.5);
+               scene.add(houseModel);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
+
+ function loadHouseModel8() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/house.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const houseModel = gltf.scene;
+               houseModel.scale.set(2, 2, 2);
+               houseModel.position.set(6,0,1.5);
+               scene.add(houseModel);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
+
+ function loadHouseModel9() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/house.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const houseModel = gltf.scene;
+               houseModel.scale.set(2, 2, 2);
+               houseModel.position.set(4,0,1.5);
+               scene.add(houseModel);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
+
+
+ // Load Walls -----------------------------------------------------------------
+
+ function loadWalls() {
+  const wallPath = './modelos/wall.glb'; // Path to the wall model
+
+  const numWalls = 5; // Number of walls to summon
+
+  // Loop to summon each wall
+  for (let i = 0; i < numWalls; i++) {
+      const position = new THREE.Vector3(29, 0, 2.6 + i * 5.95); // Adjust the position as needed
+      const rotation = new THREE.Euler(0, Math.PI / 2, 0); // Adjust the rotation as needed
+      const wallScale = 4; // Scale factor for the walls
+
+      loadWall(wallPath, position, rotation, wallScale);
   }
 }
 
-function load3DTree(position) {
+// Function to load a single wall
+function loadWall(wallPath, position, rotation, scale) {
+  const gtlloaderWall = new GLTFLoader();
 
-  console.log('Checking position:', position);
-  console.log('Occupied positions:', occupiedPositions);
+  gtlloaderWall.load(
+      wallPath,
+      function (gltf) {
+          const wall = gltf.scene;
+          wall.scale.set(scale, scale, scale);
+          wall.position.copy(position);
+          wall.rotation.copy(rotation);
+          scene.add(wall);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
 
-  if (position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('Skipping loading model at position 0,0,0.');
-    return;
-  }
+// LOAD ARVORES ----------------------------------------------------------------------
 
-  // Verificação, se a posição já está ocupada antes de carregar o modelo
-  if (!isPositionOccupied(position)) {
+function load3DTree1() {
   const gtlloaderTree = new GLTFLoader();
 
   gtlloaderTree.load(
@@ -619,18 +641,9 @@ function load3DTree(position) {
 
       function (gltf) {
           const tree = gltf.scene;
-
-          tree.position.copy(position);
           tree.scale.set(0.5, 0.5, 0.5);
-          tree.position.y = 0;
+          tree.position.set(27, 0, 2);
           scene.add(gltf.scene);
-
-          const positionKey = `${position.x},${position.y},${position.z}`;
-          occupiedPositions.add(positionKey);
-          loadedModels.set(positionKey, tree);
-          console.log("Loaded models:", loadedModels);
-          updateInformationPanel("Tree: A normal looking Tree. It looks old, maybe a few centuries old.");
-
       },
       //called while loading is progressing
       function (xhr) {
@@ -641,19 +654,187 @@ function load3DTree(position) {
           console.log('An error happened');
       }
   );
-  } else {
-    console.log('This position is already occupied by a model.');
-  }
+}
+
+function load3DTree2() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/tree.glb',
+
+      function (gltf) {
+          const tree = gltf.scene;
+          tree.scale.set(0.5, 0.5, 0.5);
+          tree.position.set(27, 0, 5);
+          scene.add(gltf.scene);
+      },
+      //called while loading is progressing
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      //called when loading has errors
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function load3DTree9() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/tree.glb',
+
+      function (gltf) {
+          const tree = gltf.scene;
+          tree.scale.set(0.5, 0.5, 0.5);
+          tree.position.set(27, 0, 14);
+          scene.add(gltf.scene);
+      },
+      //called while loading is progressing
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      //called when loading has errors
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function load3DTree3() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/tree.glb',
+
+      function (gltf) {
+          const tree = gltf.scene;
+          tree.scale.set(0.5, 0.5, 0.5);
+          tree.position.set(27, 0, 8);
+          scene.add(gltf.scene);
+      },
+      //called while loading is progressing
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      //called when loading has errors
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function load3DTree4() {
+  const gtlloaderTree = new GLTFLoader();
+  gtlloaderTree.load(
+      './modelos/tree.glb',
+      function (gltf) {
+          const tree = gltf.scene;
+          tree.scale.set(0.5, 0.5, 0.5);
+          tree.position.set(27, 0, 11);
+          scene.add(gltf.scene);
+      },
+      //called while loading is progressing
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      //called when loading has errors
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function load3DTree5() {
+  const gtlloaderTree = new GLTFLoader();
+  gtlloaderTree.load(
+      './modelos/tree.glb',
+      function (gltf) {
+          const tree = gltf.scene;
+          tree.scale.set(0.5, 0.5, 0.5);
+          tree.position.set(27, 0, 27);
+          scene.add(gltf.scene);
+      },
+      //called while loading is progressing
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      //called when loading has errors
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function load3DTree6() {
+  const gtlloaderTree = new GLTFLoader();
+  gtlloaderTree.load(
+      './modelos/tree.glb',
+      function (gltf) {
+          const tree = gltf.scene;
+          tree.scale.set(0.5, 0.5, 0.5);
+          tree.position.set(27, 0, 24);
+          scene.add(gltf.scene);
+      },
+      //called while loading is progressing
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      //called when loading has errors
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function load3DTree7() {
+  const gtlloaderTree = new GLTFLoader();
+  gtlloaderTree.load(
+      './modelos/tree.glb',
+      function (gltf) {
+          const tree = gltf.scene;
+          tree.scale.set(0.5, 0.5, 0.5);
+          tree.position.set(27, 0, 21);
+          scene.add(gltf.scene);
+      },
+      //called while loading is progressing
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      //called when loading has errors
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function load3DTree8() {
+  const gtlloaderTree = new GLTFLoader();
+  gtlloaderTree.load(
+      './modelos/tree.glb',
+      function (gltf) {
+          const tree = gltf.scene;
+          tree.scale.set(0.5, 0.5, 0.5);
+          tree.position.set(27, 0, 18);
+          scene.add(gltf.scene);
+      },
+      //called while loading is progressing
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      //called when loading has errors
+      function (error) {
+          console.log('An error happened');
+      }
+  );
 }
 
 
-function load3DWindMill(position) {
-  if (position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('Skipping loading model at position 0,0,0.');
-    return;
-}
-  // Check if the position is already occupied
-  if (!isPositionOccupied(position)) {
+function load3DWindMill() {
   const gtlloaderWindMill = new GLTFLoader();
   gtlloaderWindMill.load(
       // resource URL
@@ -661,16 +842,8 @@ function load3DWindMill(position) {
       // called when the resource is loaded
       function (gltf) {
           const windmill = gltf.scene;
-          windmill.position.copy(position);
           scene.add(gltf.scene);
           windmill.position.y = 0;
-          
-          const positionKey = `${position.x},${position.y},${position.z}`;
-          occupiedPositions.add(positionKey);
-          loadedModels.set(positionKey, windmill);
-          console.log("Loaded models:", loadedModels);
-
-          updateInformationPanel("Windmill: You can hear the wind blowing around you.");
       },
       // called while loading is progressing
       function (xhr) {
@@ -681,18 +854,12 @@ function load3DWindMill(position) {
           console.log('An error happened');
       }
   );
-  } else {
-    console.log('This position is already occupied by a model.');
-  }
 }
 
-function load3DTorii(position){
-  if (position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('Skipping loading model at position 0,0,0.');
-    return;
-  }
+// LOAD TORIIs ----------------------------------------------------------------
 
-  if (!isPositionOccupied(position)) {
+
+function load3DTorii1(){
   const gtlloaderTorii = new GLTFLoader();
 
   gtlloaderTorii.load(
@@ -702,17 +869,11 @@ function load3DTorii(position){
     // called when the resource is loaded
     function ( gltf ) {
       const torii = gltf.scene;
-      torii.position.copy(position);
-      torii.scale.set(1.4, 1.4, 1.4);
-      torii.position.y = 0;
+      torii.scale.set(2.5, 2.5, 2.5);
+      torii.position.set(16,0,15);
+      torii.rotateY(Math.PI / 2);
       scene.add( gltf.scene );
 
-      const positionKey = `${position.x},${position.y},${position.z}`;
-      occupiedPositions.add(positionKey);
-      loadedModels.set(positionKey, torii);
-      console.log("Loaded models:", loadedModels);
-
-      updateInformationPanel("Torii: The japanese entrance to a sacred place. You somehow feel calmer around it.");
     },
     // called while loading is progressing
     function ( xhr ) {
@@ -723,146 +884,137 @@ function load3DTorii(position){
       console.log( 'An error happened' );
     }
   );
-  }else{
-    console.log('This position is already occupied by a model.');
-  }
-  }
-
-function load3DBench(position){
-  if (position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('Skipping loading model at position 0,0,0.');
-    return;
 }
 
-  if (!isPositionOccupied(position)) {
+function load3DTorii2(){
+  const gtlloaderTorii = new GLTFLoader();
 
+  gtlloaderTorii.load(
+    // resource URL
+    './modelos/torii.glb',
+
+    // called when the resource is loaded
+    function ( gltf ) {
+      const torii = gltf.scene;
+      torii.scale.set(2.5, 2.5, 2.5);
+      torii.position.set(13,0,15);
+      torii.rotateY(Math.PI / 2);
+      scene.add( gltf.scene );
+
+    },
+    // called while loading is progressing
+    function ( xhr ) {
+      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    },
+    // called when loading has errors
+    function ( error ) {
+      console.log( 'An error happened' );
+    }
+  );
+}
+
+function load3DTorii3(){
+  const gtlloaderTorii = new GLTFLoader();
+
+  gtlloaderTorii.load(
+    // resource URL
+    './modelos/torii.glb',
+
+    // called when the resource is loaded
+    function ( gltf ) {
+      const torii = gltf.scene;
+      torii.scale.set(2.5, 2.5, 2.5);
+      torii.position.set(10,0,15);
+      torii.rotateY(Math.PI / 2);
+      scene.add( gltf.scene );
+
+    },
+    // called while loading is progressing
+    function ( xhr ) {
+      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    },
+    // called when loading has errors
+    function ( error ) {
+      console.log( 'An error happened' );
+    }
+  );
+}
+
+function load3DBench(position){
   const gtlloaderBench = new GLTFLoader();
 
   gtlloaderBench.load(
     // resource URL
     './modelos/bench.glb',
 
-    // called when the resource is loaded
     function ( gltf ) {
       const bench = gltf.scene;
       bench.position.copy(position);
-      bench.scale.set(1.5, 1.5, 1.5);
-      bench.position.y = 0;
+      bench.scale.set(2, 2, 2);
+      torii.position.set(15,0,15);
       scene.add( gltf.scene );
-
-
-      const positionKey = `${position.x},${position.y},${position.z}`;
-      occupiedPositions.add(positionKey);
-      loadedModels.set(positionKey, bench);
-      console.log("Loaded models:", loadedModels);
-
-      updateInformationPanel("Bench: Oh nice, a bench, my legs were starting to feel a bit tired.");
     },
-    // called while loading is progressing
     function ( xhr ) {
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     },
-    // called when loading has errors
     function ( error ) {
       console.log( 'An error happened' );
     }
   );
-} else {
-  console.log('This position is already occupied by a model.');
-}
 }
 
 function load3DArcade(position) {
-  if (position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('Skipping loading model at position 0,0,0.');
-    return;
-}
-  if (!isPositionOccupied(position)) {
-      const gtlloaderArcade = new GLTFLoader();
+    const gtlloaderArcade = new GLTFLoader();
 
-      gtlloaderArcade.load(
+    gtlloaderArcade.load(
           // resource URL
-          './modelos/arcadeMachine.glb',
+        './modelos/arcadeMachine.glb',
 
           // called when the resource is loaded
-          function (gltf) {
-              const arcade = gltf.scene;
-              arcade.position.copy(position);
-              arcade.scale.set(0.7, 0.7, 0.7);
-              arcade.position.y = 0;
-              scene.add(gltf.scene);
-
-              const positionKey = `${position.x},${position.y},${position.z}`;
-              occupiedPositions.add(positionKey);
-              loadedModels.set(positionKey, arcade);
-              console.log("Loaded models:", loadedModels);
-
-              updateInformationPanel("Arcade: The oldschool way of playing games, my father used to play these with his friends back in the day.");
-          },
+        function (gltf) {
+          const arcade = gltf.scene;
+          arcade.position.copy(position);
+          arcade.scale.set(0.7, 0.7, 0.7);
+          arcade.position.y = 0;
+          scene.add(gltf.scene);
+        },
           // called while loading is progressing
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+          // called when loading has errors
+        function (error) {
+          console.log('An error happened');
+        }
+      );
+}
+
+
+function load3DPagoda() {
+    const gtlloaderPagoda = new GLTFLoader();
+
+    gtlloaderPagoda.load(
+
+      './modelos/pagoda.glb',
+      function (gltf) {
+          const pagoda = gltf.scene;
+          pagoda.scale.set(0.25, 0.25, 0.25);
+          pagoda.position.set(22, 0, 15);
+          scene.add(gltf.scene);
+
+          },
           function (xhr) {
               console.log((xhr.loaded / xhr.total * 100) + '% loaded');
           },
-          // called when loading has errors
           function (error) {
               console.log('An error happened');
           }
       );
-  } else {
-      console.log('This position is already occupied by another building.');
-  }
-}
-
-
-function load3DPagoda(position) {
-  if (position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('Skipping loading model at position 0,0,0.');
-    return;
-}
-  if (!isPositionOccupied(position)) {
-      const gtlloaderPagoda = new GLTFLoader();
-
-      gtlloaderPagoda.load(
-          // resource URL
-          './modelos/pagoda.glb',
-
-          // called when the resource is loaded
-          function (gltf) {
-              const pagoda = gltf.scene;
-              pagoda.position.copy(position);
-              pagoda.scale.set(0.05, 0.05, 0.05);
-              pagoda.position.y = 0;
-              scene.add(gltf.scene);
-
-              const positionKey = `${position.x},${position.y},${position.z}`;
-              occupiedPositions.add(positionKey);
-              loadedModels.set(positionKey, pagoda);
-              console.log("Loaded models:", loadedModels);
-
-              updateInformationPanel("Pagoda: Woah, a pagoda, its gigantic, the multiple layers are so cool!");
-          },
-          // called while loading is progressing
-          function (xhr) {
-              console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-          },
-          // called when loading has errors
-          function (error) {
-              console.log('An error happened');
-          }
-      );
-  } else {
-      console.log('This position is already occupied by another building.');
-  }
 }
 
 
 function load3DVendingMachine(position){
-  if (position.x === 0 && position.y === 0 && position.z === 0) {
-    console.log('Skipping loading model at position 0,0,0.');
-    return;
-}
 
-  if (!isPositionOccupied(position)) {
   const gtlloaderVendingMachine = new GLTFLoader();
 
   gtlloaderVendingMachine.load(
@@ -881,9 +1033,6 @@ function load3DVendingMachine(position){
       occupiedPositions.add(positionKey);
       loadedModels.set(positionKey, vendingMachine);
       console.log("Loaded models:", loadedModels);
-
-      updateInformationPanel("Vending Machine: A vending machine, after a closer look, its filled with snacks.");
-
     },
     // called while loading is progressing
     function ( xhr ) {
@@ -894,9 +1043,6 @@ function load3DVendingMachine(position){
       console.log( 'An error happened' );
     }
   );
-  } else {
-    console.log('This position is already occupied by a model.');
-  }
 }
 
 
@@ -924,8 +1070,6 @@ function load3DVendingMachine(position){
 
     sunMesh.position.set(sunMeshX, sunMeshY, sunMesh.position.z);
     moonMesh.position.set(moonMeshX, moonMeshY, moonMesh.position.z);
-
-    updateWeatherPanel();
 
     if (snowEffect) {
       snowEffect.animateSnow();
