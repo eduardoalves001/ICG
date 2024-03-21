@@ -295,51 +295,35 @@ function addStarsToSky() {
     setupLights();
   }
 
-  // Inverno -> Primavera -> Verão -> Outono
-  // Neve -> Noite
-  // Sakura -> Dia
-  // Raining -> Noite
-
-  let currentWeather = "Sunny/Moony Season";
-
-
-function updateBackground() {
-  const isNight = !sunMesh.visible;
-  
-
-  if (isNight) {
-      addStarsToSky();
-      scene.background.setHex(0x000022);
-  } else {
-      scene.background.setHex(0x87ceeb);
+  function updateBackground() {
+    const isNight = sunMesh.position.y <= 0;
+    
+    if (isNight) {
+        addStarsToSky();
+        scene.background.setHex(0x000022);
+        if (sunMesh.position.x >= 0) {
+            stopSakura();
+            startRain();
+            stopSnow();
+        } else{
+            startSnow();
+            stopRain();
+            stopSakura();
+        }
+    }else{
+        scene.background.setHex(0x87ceeb);
+        if(sunMesh.position.x > 0){
+          stopRain();
+          stopSakura();
+          stopSnow();
+        }else{
+            startSakura();
+            stopRain();
+            stopSnow();
+        }
+    }
   }
-
-  if (currentWeather === "Sakura Season") {
-      startSakura();
-  } else {
-      stopSakura();
-  }
-
-  if (currentWeather === "Snowing Season") {
-      startSnow();
-  } else {
-      stopSnow();
-  }
-
-  if (currentWeather === "Rainy Season") {
-      startRain();
-  } else {
-      stopRain();
-  }
-}
-
-
-
 updateBackground();
-
-
-
-
 
 //------------------------------ Try stuff out ---------------------------------------------
 

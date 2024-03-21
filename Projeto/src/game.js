@@ -26,9 +26,6 @@ export function createGame() {
     scene.update(city);
   }
 
-
-
-
   function onMouseDown(event) {
     if (event.button === 0) {
       const selectedObject = scene.getSelectedObject(event);
