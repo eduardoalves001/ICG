@@ -1,83 +1,6 @@
 export default {
-    // 'home': () => {
-    //     return {
-    //         type: 'home',
-    //         style: Math.floor(3*Math.random()) + 1,
-    //         height: 1,
-    //         updated: true,
-    //         update: function(){
-    //         }
-    //     }
-    // }, 
-    // 'tree': () => {
-    //     return {
-    //         type: 'tree',
-    //         style: Math.floor(3*Math.random()) + 1,
-    //         height: 1,
-    //         updated: true,
-    //         update: function(){
-    //         }
-    //     }
-    // }, 
-
-    // 'cloud': () => {
-    //     return {
-    //         type: 'cloud',
-    //         style: Math.floor(3*Math.random()) + 1,
-    //         height: 1,
-    //         updated: true,
-    //         update: function(){
-    //         }
-    //     }
-    // }, 
-
-    // 'vendingMachine': () => {
-    //     return {
-    //         type: 'vendingMachine',
-    //         style: Math.floor(3*Math.random()) + 1,
-    //         height: 1,
-    //         updated: true,
-    //         update: function(){
-    //         }
-    //     }
-    // }, 
-
-    // 'windmill': () => {
-    //     return {
-    //         type: 'windmill',
-    //         style: Math.floor(3*Math.random()) + 1,
-    //         height: 1,
-    //         updated: true,
-    //         update: function(){
-    //         }
-    //     }
-    // }, 
-
-
-    // 'torii': () => {
-    //     return {
-    //         type: 'torii',
-    //         style: Math.floor(3*Math.random()) + 1,
-    //         height: 1,
-    //         updated: true,
-    //         update: function(){
-    //         }
-    //     }
-    // }, 
-
-
-    // 'bench': () => {
-    //     return {
-    //         type: 'bench',
-    //         style: Math.floor(3*Math.random()) + 1,
-    //         height: 1,
-    //         updated: true,
-    //         update: function(){
-    //         }
-    //     }
-    // }, 
-
-
+    // Edificios onde foi utilizada uma textura
+    // Muro contem uma height que permite que cresca ao contrário de todos os outros edificios, permitindo ao utilizador a possibildidade de construir muros de diversas alturas.
     'wall': () => {
         return {
             type: 'wall',
@@ -88,27 +11,6 @@ export default {
             }
         }
     }, 
-
-
-    // 'arcade': () => {
-    //     return {
-    //         type: 'arcade',
-    //         style: Math.floor(3*Math.random()) + 1,
-    //         height: 1,
-    //         updated: true,
-    //         update: function(){
-    //         }
-    //     }
-    // },
-    // 'road': () => {
-    //     return {
-    //         type: 'road',
-    //         updated: true,
-    //         update: function(){
-    //             this.updated = false;
-    //         }
-    //     }
-    // }, 
 
     'sun': () => {
         return {

@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 
-const cube = new THREE.BoxGeometry(1, 1, 1);
-const sphere = new THREE.SphereGeometry(5, 20, 20);
-const sphere2 = new THREE.SphereGeometry(5, 20, 20);
-let loader = new THREE.TextureLoader();
+const cubo = new THREE.BoxGeometry(1, 1, 1); // Definir cubo para o chão.
+const esferaSol = new THREE.SphereGeometry(5, 20, 20); // Definir esfera para o Sol.
+const esferaLua = new THREE.SphereGeometry(5, 20, 20); // Definir esfera para a Lua.
+
+let loader = new THREE.TextureLoader(); // Loader de texturas.
 
 
 function loadTexture(url) {
@@ -14,9 +15,12 @@ function loadTexture(url) {
   return tex;
 }
 
+// Definir as diferentes texturas com imagens externas.
 const textures = {
-    'grass': loadTexture('./textures/relva.jpg'),
-    'snow': loadTexture('./textures/neve.png'),
+    'grass': loadTexture('./textures/relva.jpg'), // Textura usada para o chão.
+    'snow': loadTexture('./textures/neve.png'), 
+    'petals': loadTexture('./textures/petalas.png'),
+
 
     'sun': loadTexture('./textures/sun.jpg'),
     'moon': loadTexture('./textures/moon.jpg'),
@@ -57,29 +61,31 @@ const textures = {
 
   };
 
-function getTopMaterial() {
+// Função que retorna a parte de cima das construções com textura, que são os muros.
+function receberTexturaCima() {
   return new THREE.MeshLambertMaterial({ color: 0x555555 });
 }
 
-function getSideMaterial(textureName) {
-  return new THREE.MeshLambertMaterial({ map: textures[textureName].clone() })
+// Função que retorna a parte de lado das construções com textura, que são os muros.
+function receberTexturaLado(nomeTextura) {
+  return new THREE.MeshLambertMaterial({ map: textures[nomeTextura].clone() })
 }
 
+// Função para criação de uma instancia de uma construção.
 export function createAssetInstance(type, x, y, data) {
-  // If asset exists, configure it and return it
   if (type in assets) {
     return assets[type](x, y, data);
   } else {
-    console.warn(`Asset Type ${type} is not found.`);
+    console.warn(`Este tipo ${type} não foi encontrado.`);
     return undefined;
   }
 }
 
-// Asset library
+// Todos os assets disponiveis, que vão usar as texturas acima.
 const assets = {
   'sun': (x, y) => {
     const material = new THREE.MeshLambertMaterial({ map: textures.sun });
-    const mesh = new THREE.Mesh(sphere, material);
+    const mesh = new THREE.Mesh(esferaSol, material);
     mesh.userData = { x, y };
     mesh.position.set(8, 40, 8);
     mesh.receiveShadow = false;
@@ -89,7 +95,7 @@ const assets = {
 
   'moon': (x, y) => {
     const material = new THREE.MeshLambertMaterial({ map: textures.moon });
-    const mesh = new THREE.Mesh(sphere2, material);
+    const mesh = new THREE.Mesh(esferaLua, material);
     mesh.userData = { x, y };
     mesh.position.set(8, -40, 8); 
     mesh.receiveShadow = false;
@@ -98,7 +104,7 @@ const assets = {
 
   'grass': (x, y) => {
     const material = new THREE.MeshLambertMaterial({ map: textures.grass });
-    const mesh = new THREE.Mesh(cube, material);
+    const mesh = new THREE.Mesh(cubo, material);
     mesh.userData = { x, y };
     mesh.position.set(x, -0.5, y);
     mesh.receiveShadow = true;
@@ -107,7 +113,16 @@ const assets = {
 
   'snow': (x, y) => {
     const material = new THREE.MeshLambertMaterial({ map: textures.snow });
-    const mesh = new THREE.Mesh(cube, material);
+    const mesh = new THREE.Mesh(cubo, material);
+    mesh.userData = { x, y };
+    mesh.position.set(x, -0.5, y);
+    mesh.receiveShadow = true;
+    return mesh;
+  },
+
+  'petals': (x, y) => {
+    const material = new THREE.MeshLambertMaterial({ map: textures.petals });
+    const mesh = new THREE.Mesh(cubo, material);
     mesh.userData = { x, y };
     mesh.position.set(x, -0.5, y);
     mesh.receiveShadow = true;
@@ -124,31 +139,25 @@ const assets = {
   'wall': (x, y, data) => createZoneMesh(x, y, data),
   // 'arcade': (x, y, data) => createZoneMesh(x, y, data),
 
-  // 'road': (x, y) => {
-  //   const material = new THREE.MeshLambertMaterial({ map: textures.road });
-  //   const mesh = new THREE.Mesh(cube, material);
-  //   mesh.userData = { x, y };
-  //   mesh.scale.set(1, 0.02, 1);
-  //   mesh.position.set(x, 0.01, y);
-  //   mesh.receiveShadow = true;
-  //   return mesh;
-  // }
 }
 
 function createZoneMesh(x, y, data) {
-  const textureName = data.type + data.style;
+  const nomeTextura = data.type + data.style;
 
-  const topMaterial = getTopMaterial();
-  const sideMaterial = getSideMaterial(textureName);
-  let materialArray = [
-    sideMaterial, 
-    sideMaterial, 
-    topMaterial, 
-    topMaterial, 
-    sideMaterial, 
-    sideMaterial, 
+  const texturaCima = receberTexturaCima();
+  const texturaLado = receberTexturaLado(nomeTextura);
+
+  // Definir os lados do cubo que irá ter as texturas.
+  let arrayTextura = [
+    texturaLado, 
+    texturaLado, 
+    texturaCima, 
+    texturaCima, 
+    texturaLado, 
+    texturaLado, 
   ];
-  let mesh = new THREE.Mesh(cube, materialArray);
+
+  let mesh = new THREE.Mesh(cubo, arrayTextura);
   mesh.userData = { x, y };
   mesh.scale.set(1, (data.height - 0.95) / 2, 1);
   mesh.material.forEach(material => material.map?.repeat.set(1, data.height - 1));

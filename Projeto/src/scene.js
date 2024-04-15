@@ -37,7 +37,7 @@ export function createScene() {
   const moonMesh = createAssetInstance('moon', 10, 10); 
 
 
-  let starsAdded = false; // Flag to track whether stars have been added
+  let estrelasColocadas = false;
 
   // ---------------------------- ADICIONAR NEVE A CAIR DURANTE A NOITE ------------------------------------------
 
@@ -217,7 +217,7 @@ function stopRain() {
 // -------------------------------------- ADICIONAR ESTRELAS AO CÉU NOTURNO ---------------------------------
 
 function addStarsToSky() {
-    if (!starsAdded && sunMesh.position.y < 0) {
+    if (!estrelasColocadas && sunMesh.position.y < 0) {
         const starCount = 10000;
         const starGeometry = new THREE.BufferGeometry();
         const starMaterial = new THREE.PointsMaterial({
@@ -235,7 +235,7 @@ function addStarsToSky() {
         const stars = new THREE.Points(starGeometry, starMaterial);
         stars.userData.ignoreSelection = true;
         scene.add(stars);
-        starsAdded = true; // Set the flag to true indicating stars have been added
+        estrelasColocadas = true; // Set the flag to true indicating stars have been added
     }
 }
 
@@ -254,24 +254,30 @@ function addStarsToSky() {
       buildings.push([...Array(city.size)]);
     }
 
-   
 
     scene.add(sunMesh);
     scene.add(moonMesh);
+    
+    
+    // Parte relevante para iluminação
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+    sunLight.position.set(20, 20, 20);
+    sunLight.castShadow = true;
+    sunLight.shadow.camera.left = -10;
+    sunLight.shadow.camera.right = 10;
+    sunLight.shadow.camera.top = 0;
+    sunLight.shadow.camera.bottom = -10;
+    sunLight.shadow.mapSize.width = 1024;
+    sunLight.shadow.mapSize.height = 1024;
+    sunLight.shadow.camera.near = 0.5;
+    sunLight.shadow.camera.far = 50;
+    scene.add(sunLight);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
-    setupLights();
+
   }
 
-  // Inverno -> Primavera -> Verão -> Outono
-  // Neve -> Noite
-  // Sakura -> Dia
-  // Raining -> Noite
-
   let currentWeather = "Sunny/Moony Season";
-
-function getCurrentWeather() {
-    return currentWeather;
-}
 
 function updateWeatherPanel() {
     const weatherTextElement = document.getElementById('weather-text');
@@ -309,40 +315,69 @@ function updateBackground() {
   }
 }
 
-// Event listeners for weather buttons
+var audio;
+
+
 document.getElementById('sunny-button').addEventListener('click', function() {
     currentWeather = "Sunny/Moony Season";
     updateWeatherPanel();
     updateBackground();
+
+    if(audio && !audio.paused) {
+      audio.pause();
+    }
+
+    audio = new Audio();
+    audio.src = "/audio/Sunny_sound.wav";
+    audio.play();
 });
 
 document.getElementById('rainy-button').addEventListener('click', function() {
     currentWeather = "Rainy Season";
     updateWeatherPanel();
     updateBackground();
+
+    if(audio && !audio.paused) {
+      audio.pause();
+    }
+
+    audio = new Audio();
+    audio.src = "/audio/rain_sound_ambience.wav";
+    audio.play();
+
 });
 
 document.getElementById('snowing-button').addEventListener('click', function() {
     currentWeather = "Snowing Season";
     updateWeatherPanel();
     updateBackground();
+    if(audio && !audio.paused) {
+      audio.pause();
+    }
+
+    audio = new Audio();
+    audio.src = "/audio/snow.mp3";
+    audio.play();
+
 });
 
 document.getElementById('sakura-button').addEventListener('click', function() {
     currentWeather = "Sakura Season";
     updateWeatherPanel();
     updateBackground();
+    if(audio && !audio.paused) {
+      audio.pause();
+    }
+
+    audio = new Audio();
+    audio.src = "/audio/sakura.mp3";
+    audio.play();
+    
 });
 
 // Initial setup
 updateWeatherPanel();
 updateBackground();
-
-
-
-
-
-//------------------------------ Try stuff out ---------------------------------------------
 
 
 
@@ -393,11 +428,6 @@ function getMouseCoordinates(event) {
     return new THREE.Vector2(x, y);
 }
 
-// Function to disable tile selection mode
-function disableTileSelectionMode() {
-    // Remove the click event listener from the renderer's dom element
-    renderer.domElement.removeEventListener('click', onTileClick);
-}
 
 // Add event listener to the house button
 const houseButtonupload = document.getElementById('button-home');
@@ -899,10 +929,6 @@ function load3DVendingMachine(position){
   }
 }
 
-
-// ------------------------------- End try stuff out----------------------------
-
-
   function animate(){
     requestAnimationFrame(animate);
 
@@ -966,21 +992,6 @@ function load3DVendingMachine(position){
     }
   }
 
-  function setupLights() {
-    const sun = new THREE.DirectionalLight(0xffffff, 1)
-    sun.position.set(20, 20, 20);
-    sun.castShadow = true;
-    sun.shadow.camera.left = -10;
-    sun.shadow.camera.right = 10;
-    sun.shadow.camera.top = 0;
-    sun.shadow.camera.bottom = -10;
-    sun.shadow.mapSize.width = 1024;
-    sun.shadow.mapSize.height = 1024;
-    sun.shadow.camera.near = 0.5;
-    sun.shadow.camera.far = 50;
-    scene.add(sun);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
-  }
 
   function draw() {
     renderer.render(scene, camera.camera);

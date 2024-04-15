@@ -59,7 +59,6 @@ export function createGame() {
 
   function useActiveTool(object) {
     if (!object || object.userData.ignoreSelection) {
-      // updateInfoPanel(null);
       return;
     }
 
@@ -68,7 +67,6 @@ export function createGame() {
 
     if (activeToolId === 'select') {
       scene.setActiveObject(object);
-      // updateInfoPanel(tile);
     } else if (activeToolId === 'bulldoze') {
       bulldoze(tile);
     } else if (!tile.building) {

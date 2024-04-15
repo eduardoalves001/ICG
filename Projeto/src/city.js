@@ -1,4 +1,4 @@
-export function createCity(size){
+export function createCity(size){ // Função responsável pela criação da cidade
     const tiles = []; // Array de informação 2D. Cada elemento do array contêm um objeto. Objeto = tile.
     initialize();
     function initialize(){
@@ -34,6 +34,8 @@ function createTile(x, y){
         x,
         y,
         terrainId: 'grass',
+        terrainId2: 'snow',
+        terrainId3: 'petals',
         building:undefined,
     }; 
 }

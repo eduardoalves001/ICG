@@ -1,147 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="./main.css">
-  <link rel="icon" type="image/x-icon" href="./favicon.ico">
-  <!-- Import Three.js library-->
-  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@v0.153.0/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@v0.153.0/examples/jsm/"
-      }
-    }
-  </script>
-  <script>
-    function slideToolbar(direction) {
-    var toolbar = document.getElementById('ui-toolbar');
-    var toolbarWidth = toolbar.offsetWidth;
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="./frontpage.css">
+    </head>
+    <body>
 
-    if (direction === 'left') {
-        toolbar.style.transition = "left 0.5s ease";
-        toolbar.style.left = -toolbarWidth + 'px';
-        // Hide the "Slide Left" button when toolbar is slid to the left
-        document.getElementById('slide-left-button').style.display = 'none';
-        // Show the "Slide Right" button when toolbar is slid to the left
-        document.getElementById('slide-right-button').style.display = 'block';
-    } else if (direction === 'right') {
-        toolbar.style.transition = "left 0.5s ease";
-        toolbar.style.left = 0;
-        // Show the "Slide Left" button when toolbar is in default position
-        document.getElementById('slide-left-button').style.display = 'block';
-        // Hide the "Slide Right" button when toolbar is in default position
-        document.getElementById('slide-right-button').style.display = 'none';
-    }
-}
-  </script>
-</head>
-<body>
-  <div id="root-window">
-    <div id="render-target">
-      <div id="ui-toolbar">
+        <div class="container">
+            <h1 id='Title'>Choose an option</h1>
+            <button id='game-button'>PLAY</button>
+            <button id='observe-button'>VIEW</button>
+        </div>
 
-        <button id='button-select' class="ui-button selected" data-type="select"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/selecionar.png">
-        </button>
-        <button id='button-home' class="ui-button2" data-type="home"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/home.png">
-        </button>
-        <button id='button-tree' class="ui-button3" data-type="tree"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/tree.png">
-        </button>
+        <div class="quote-box">
+            <p class="quote">"Imagination is the beginning of creation. You imagine what you desire, you will what you imagine, and at last, you create what you will."<br>- George Bernard Shaw, 1903.</p>
+        </div>
         
-        <button id='button-windmill' class="ui-button5" data-type="windmill"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/windmill.png">
-        </button>
+        <script>
+            var button = document.getElementById('game-button');
+            button.addEventListener('click', function() {
+              window.location.href = 'play.html';
+            });
+        </script>
 
-        <button id='button-torii' class="ui-button6" data-type="torii"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/torii.png">
-        </button>
-        
-        <button id='button-bench' class="ui-button7" data-type="bench"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/bench.png">
-        </button>
+        <script>
+            var button = document.getElementById('observe-button');
+            button.addEventListener('click', function() {
+            window.location.href = 'observe.html';
+            });
+        </script>
 
-        <button id='button-arcade' class="ui-button9" data-type="arcade"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/arcade.png">
-        </button>
-        
-        <button id='button-vendingmachine' class="ui-button4" data-type="vendingMachine"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/vendingMachine.png">
-        </button>
-
-        
-
-        <button id='button-wall' class="ui-button8" data-type="wall"
-        onclick="game.onToolSelected(event)">
-        <img class="toolbar-icon" src="./icons/wall.png">
-      </button>
-
-      <button id='button-road' class="ui-button10" data-type="road"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/pagoda.png">
-        </button>
-
-        <button id='upgradeButton' class="ui-button11" data-type="upgrade"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/upgrade.png">
-        </button>
-
-        <button id='button-bulldoze' class="ui-button1" data-type="bulldoze"
-          onclick="game.onToolSelected(event)">
-          <img class="toolbar-icon" src="./icons/delete.png">
-        </button>
-
-      </div>
-  </div>
-
-  <button id="slide-left-button" onclick="slideToolbar('left')"><img class="toolbar-icon" src="./icons/slideLeft.png"></button>
-  <button id="slide-right-button" onclick="slideToolbar('right')"style="display: none;"><img class="toolbar-icon" src="./icons/slideRight.png"></button>
-  
-  <div id="city-name" class="city-name-box" contenteditable="true" spellcheck="false">Nome da Cidade</div>
-
-  <div id="info-panel" class="ui-container">
-    <h1 id="info-panel-text">Information: </h1>
-    <div id="selected-object-info"></div>
-  </div>
-
-  <div id="weather-panel" class="ui-container1">
-    <h1 id="weather-text">Clima: </h1>
-    <div id="selected-object-info1"></div>
-  </div>
-
-  <div id="season-buttons">
-    <button id="sunny-button"><img class="weather-button sun" src="./icons/sun.png"></button>
-    <button id="rainy-button"><img class="weather-button rain" src="./icons/rain.png"></button>
-    <button id="sakura-button"><img class="weather-button snow" src="./icons/sakura.png"></button>
-    <button id="snowing-button"><img class="weather-button sakura" src="./icons/snow.png"></button>
-  </div>
-
-  <div id="main-menu">
-    <button id="main-menu-button">Back to Main Menu</button>
-  </div>
-
-  <script>
-    var backButton = document.getElementById('main-menu-button');
-    backButton.addEventListener('click', function() {
-        window.location.href = 'frontpage.html';
-    });
-  </script>
-
-  <button id="rotate-button"><img class="toolbar-icon" src="./icons/rotate.png"></button>
-
-  <script type="module">
-    import { createGame } from './src/game.js';
-  </script>
-</body>
+    </body>
 </html>
