@@ -25,7 +25,7 @@ export function createScene() {
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
-  // Valores importantes para o tempo
+
   let time = 0;
 
   let activeObject = undefined;
@@ -37,12 +37,12 @@ export function createScene() {
   const moonMesh = createAssetInstance('moon', 10, 10); 
 
 
-  let estrelasColocadas = false;
+  let starsAdded = false; 
 
   // ---------------------------- ADICIONAR NEVE A CAIR DURANTE A NOITE ------------------------------------------
 
   function createSnow() {
-    // Setup snow particle parameters
+   
     const snowCount = 5000;
     const snowGeometry = new THREE.BufferGeometry();
     const snowMaterial = new THREE.PointsMaterial({
@@ -52,28 +52,28 @@ export function createScene() {
         opacity: 1
     });
 
-    // Create snow particles
+   
     const snowVertices = [];
     for (let i = 0; i < snowCount; i++) {
-        const x = Math.random() * 200 - 100; // Random x position within the scene
-        const y = Math.random() * 100 + 50;   // Initial y position above the scene
-        const z = Math.random() * 200 - 100; // Random z position within the scene
+        const x = Math.random() * 200 - 100; 
+        const y = Math.random() * 100 + 50;  
+        const z = Math.random() * 200 - 100;
         snowVertices.push(x, y, z);
     }
     snowGeometry.setAttribute('position', new THREE.Float32BufferAttribute(snowVertices, 3));
     const snow = new THREE.Points(snowGeometry, snowMaterial);
     snow.userData.ignoreSelection = true;
 
-    // Update sakura animation
+
     function animateSnow() {
         const positions = snow.geometry.attributes.position.array;
         for (let i = 1; i < positions.length; i += 3) {
-            positions[i] -= 0.1; // Update y position to simulate snow falling
+            positions[i] -= 0.1; 
             if (positions[i] < -50) {
-                positions[i] = 100; // Reset y position if snow falls out of view
+                positions[i] = 100; 
             }
         }
-        snow.geometry.attributes.position.needsUpdate = true; // Update particle positions
+        snow.geometry.attributes.position.needsUpdate = true;
     }
     return { snow, animateSnow };
   }
@@ -82,15 +82,15 @@ export function createScene() {
 
 function startSnow() {
     if (!snowEffect) {
-      const { snow, animateSnow } = createSnow(); // Assuming createSnow returns snow and animateSnow
-      snowEffect = { snow, animateSnow }; // Assign snow and animateSnow to snowEffect
+      const { snow, animateSnow } = createSnow(); 
+      snowEffect = { snow, animateSnow }; 
       scene.add(snowEffect.snow);
     }
 }
 
 function stopSnow() {
     if (snowEffect) {
-        // Remove sakura from the scene
+      
         scene.remove(snowEffect.snow);
         snowEffect = null;
     }
@@ -102,7 +102,7 @@ function stopSnow() {
 
 
   function createSakura() {
-    // Setup sakura particle parameters
+    
     const sakuraCount = 5000;
     const sakuraGeometry = new THREE.BufferGeometry();
     const sakuraMaterial = new THREE.PointsMaterial({
@@ -112,28 +112,28 @@ function stopSnow() {
         opacity: 1
     });
 
-    // Create sakura particles
+
     const sakuraVertices = [];
     for (let i = 0; i < sakuraCount; i++) {
-        const x = Math.random() * 200 - 100; // Random x position within the scene
-        const y = Math.random() * 100 + 50;   // Initial y position above the scene
-        const z = Math.random() * 200 - 100; // Random z position within the scene
+        const x = Math.random() * 200 - 100; 
+        const y = Math.random() * 100 + 50;   
+        const z = Math.random() * 200 - 100; 
         sakuraVertices.push(x, y, z);
     }
     sakuraGeometry.setAttribute('position', new THREE.Float32BufferAttribute(sakuraVertices, 3));
     const sakura = new THREE.Points(sakuraGeometry, sakuraMaterial);
     sakura.userData.ignoreSelection = true;
 
-    // Update sakura animation
+  
     function animateSakura() {
         const positions = sakura.geometry.attributes.position.array;
         for (let i = 1; i < positions.length; i += 3) {
-            positions[i] -= 0.1; // Update y position to simulate sakura falling
+            positions[i] -= 0.1; 
             if (positions[i] < -50) {
-                positions[i] = 100; // Reset y position if sakura petals falls out of view
+                positions[i] = 100; 
             }
         }
-        sakura.geometry.attributes.position.needsUpdate = true; // Update particle positions
+        sakura.geometry.attributes.position.needsUpdate = true; 
     }
     return { sakura, animateSakura };
   }
@@ -142,15 +142,15 @@ function stopSnow() {
 
 function startSakura() {
     if (!sakuraEffect) {
-      const { sakura, animateSakura } = createSakura(); // Assuming createSakura returns sakura and animateSakura
-      sakuraEffect = { sakura, animateSakura }; // Assign sakura and animateSakura to sakuraEffect
+      const { sakura, animateSakura } = createSakura(); 
+      sakuraEffect = { sakura, animateSakura }; 
       scene.add(sakuraEffect.sakura);
     }
 }
 
 function stopSakura() {
     if (sakuraEffect) {
-        // Remove sakura from the scene
+      
         scene.remove(sakuraEffect.sakura);
         sakuraEffect = null;
     }
@@ -160,7 +160,7 @@ function stopSakura() {
   // ----------------------------- ADICIONAR CHUVA DURANTE O DIA ----------------------------------------
 
   function createRain() {
-    // Setup rain particle parameters
+   
     const rainCount = 9000;
     const rainGeometry = new THREE.BufferGeometry();
     const rainMaterial = new THREE.PointsMaterial({
@@ -170,28 +170,28 @@ function stopSakura() {
         opacity: 1
     });
 
-    // Create rain particles
+ 
     const rainVertices = [];
     for (let i = 0; i < rainCount; i++) {
-        const x = Math.random() * 200 - 100; // Random x position within the scene
-        const y = Math.random() * 100 + 50;   // Initial y position above the scene
-        const z = Math.random() * 200 - 100; // Random z position within the scene
+        const x = Math.random() * 200 - 100; 
+        const y = Math.random() * 100 + 50;   
+        const z = Math.random() * 200 - 100;
         rainVertices.push(x, y, z);
     }
     rainGeometry.setAttribute('position', new THREE.Float32BufferAttribute(rainVertices, 3));
     const rain = new THREE.Points(rainGeometry, rainMaterial);
     rain.userData.ignoreSelection = true;
 
-    // Update rain animation
+
     function animateRain() {
         const positions = rain.geometry.attributes.position.array;
         for (let i = 1; i < positions.length; i += 3) {
-            positions[i] -= 0.1; // Update y position to simulate rain falling
+            positions[i] -= 0.1; 
             if (positions[i] < -50) {
-                positions[i] = 100; // Reset y position if raindrop falls out of view
+                positions[i] = 100; 
             }
         }
-        rain.geometry.attributes.position.needsUpdate = true; // Update particle positions
+        rain.geometry.attributes.position.needsUpdate = true; 
     }
     return { rain, animateRain };
   }
@@ -200,15 +200,14 @@ function stopSakura() {
 
 function startRain() {
     if (!rainEffect) {
-      const { rain, animateRain } = createRain(); // Assuming createRain returns rain and animateRain
-      rainEffect = { rain, animateRain }; // Assign rain and animateRain to rainEffect
+      const { rain, animateRain } = createRain(); 
+      rainEffect = { rain, animateRain }; 
       scene.add(rainEffect.rain);
     }
 }
 
 function stopRain() {
     if (rainEffect) {
-        // Remove rain from the scene
         scene.remove(rainEffect.rain);
         rainEffect = null;
     }
@@ -217,7 +216,7 @@ function stopRain() {
 // -------------------------------------- ADICIONAR ESTRELAS AO CÉU NOTURNO ---------------------------------
 
 function addStarsToSky() {
-    if (!estrelasColocadas && sunMesh.position.y < 0) {
+    if (!starsAdded && sunMesh.position.y < 0) {
         const starCount = 10000;
         const starGeometry = new THREE.BufferGeometry();
         const starMaterial = new THREE.PointsMaterial({
@@ -235,7 +234,7 @@ function addStarsToSky() {
         const stars = new THREE.Points(starGeometry, starMaterial);
         stars.userData.ignoreSelection = true;
         scene.add(stars);
-        estrelasColocadas = true; // Set the flag to true indicating stars have been added
+        starsAdded = true;
     }
 }
 
@@ -254,30 +253,24 @@ function addStarsToSky() {
       buildings.push([...Array(city.size)]);
     }
 
+   
 
     scene.add(sunMesh);
     scene.add(moonMesh);
-    
-    
-    // Parte relevante para iluminação
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1);
-    sunLight.position.set(20, 20, 20);
-    sunLight.castShadow = true;
-    sunLight.shadow.camera.left = -10;
-    sunLight.shadow.camera.right = 10;
-    sunLight.shadow.camera.top = 0;
-    sunLight.shadow.camera.bottom = -10;
-    sunLight.shadow.mapSize.width = 1024;
-    sunLight.shadow.mapSize.height = 1024;
-    sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 50;
-    scene.add(sunLight);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
-
+    setupLights();
   }
 
+  // Inverno -> Primavera -> Verão -> Outono
+  // Neve -> Noite
+  // Sakura -> Dia
+  // Raining -> Noite
+
   let currentWeather = "Sunny/Moony Season";
+
+function getCurrentWeather() {
+    return currentWeather;
+}
 
 function updateWeatherPanel() {
     const weatherTextElement = document.getElementById('weather-text');
@@ -315,8 +308,9 @@ function updateBackground() {
   }
 }
 
-var audio;
 
+// Mudança de tempo e efeito sonoro
+var audio;
 
 document.getElementById('sunny-button').addEventListener('click', function() {
     currentWeather = "Sunny/Moony Season";
@@ -375,52 +369,36 @@ document.getElementById('sakura-button').addEventListener('click', function() {
     
 });
 
-// Initial setup
+
 updateWeatherPanel();
 updateBackground();
 
 
+//------------------------------ Try stuff out ---------------------------------------------
 
-let selectedPosition = null; // Variable to store the selected position
-let tileSelectionModeEnabled = false;
 
-// Add event listener to the select button
-const selectButton = document.getElementById('button-select');
-selectButton.addEventListener('click', function() {
-  tileSelectionModeEnabled = !tileSelectionModeEnabled;
-  // Enable mode for selecting a tile
-  if (tileSelectionModeEnabled) {
-    enableTileSelectionMode();
-  }
-});
 
-// Function to enable mode for selecting a tile
+let selectedPosition = null; // Variável para guardar a posição selecionada
+
 function enableTileSelectionMode() {
-    // Add event listener to the renderer's dom element to listen for click events
     renderer.domElement.addEventListener('click', onTileClick);
 }
 
-// Function to handle click event on a tile
 function onTileClick(event) {
-    // Get the mouse coordinates
+  
     const mouseCoords = getMouseCoordinates(event);
 
-    // Cast a ray from the camera to the clicked position
     raycaster.setFromCamera(mouseCoords, camera.camera);
-
-    // Find intersected objects
     const intersects = raycaster.intersectObjects(scene.children);
 
-    // Check if any object is intersected
     if (intersects.length > 0) {
-        // Get the position of the intersected object (tile)
         selectedPosition = intersects[0].object.position;
         console.log('Selected position:', selectedPosition);
         updateInformationPanel();
     }
 }
 
-// Function to get mouse coordinates relative to the renderer's dom element
+// Função para receber coordenadas do rato
 function getMouseCoordinates(event) {
     const rect = renderer.domElement.getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -429,12 +407,24 @@ function getMouseCoordinates(event) {
 }
 
 
-// Add event listener to the house button
+// Permite a escolha de Tile para construção desde o inicio do jogo.
+enableTileSelectionMode();
+
+const lanternButtonupload = document.getElementById('button-lantern');
+lanternButtonupload.addEventListener('click', function() {
+    if (selectedPosition) {
+        loadLanternModel(selectedPosition);
+    } else {
+        console.log('Please select a tile first.');
+    }
+});
+
+
+
 const houseButtonupload = document.getElementById('button-home');
 houseButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
+  
     if (selectedPosition) {
-        // Load the house model to the selected position
         loadHouseModel(selectedPosition);
     } else {
         console.log('Please select a tile first.');
@@ -443,9 +433,8 @@ houseButtonupload.addEventListener('click', function() {
 
 const treeButtonupload = document.getElementById('button-tree');
 treeButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
+   
     if (selectedPosition) {
-        // Load the house model to the selected position
         load3DTree(selectedPosition);
     } else {
         console.log('Please select a tile first.');
@@ -454,9 +443,8 @@ treeButtonupload.addEventListener('click', function() {
 
 const windMillButtonupload = document.getElementById('button-windmill');
 windMillButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
+
     if (selectedPosition) {
-        // Load the house model to the selected position
         load3DWindMill(selectedPosition);
     } else {
         console.log('Please select a tile first.');
@@ -465,9 +453,8 @@ windMillButtonupload.addEventListener('click', function() {
 
 const toriiButtonupload = document.getElementById('button-torii');
 toriiButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
+ 
     if (selectedPosition) {
-        // Load the house model to the selected position
         load3DTorii(selectedPosition);
     } else {
         console.log('Please select a tile first.');
@@ -476,9 +463,8 @@ toriiButtonupload.addEventListener('click', function() {
 
 const benchButtonupload = document.getElementById('button-bench');
 benchButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
+   
     if (selectedPosition) {
-        // Load the house model to the selected position
         load3DBench(selectedPosition);
     } else {
         console.log('Please select a tile first.');
@@ -487,9 +473,8 @@ benchButtonupload.addEventListener('click', function() {
 
 const pagodaButtonupload = document.getElementById('button-road');
 pagodaButtonupload.addEventListener('click', function() {
-    // Check if a tile is selected
+
     if (selectedPosition) {
-        // Load the house model to the selected position
         load3DPagoda(selectedPosition);
     } else {
         console.log('Please select a tile first.');
@@ -629,6 +614,44 @@ function loadHouseModel(position) {
   }
 }
 
+function loadLanternModel(position) {
+  if (position.x === 0 && position.y === 0 && position.z === 0) {
+    console.log('Skipping loading model at position 0,0,0.');
+    return;
+}
+ // Verificação, se a posição já está ocupada antes de carregar o modelo
+  if (!isPositionOccupied(position)) {
+      const houseUrl = './modelos/redLantern.glb';
+      const gtlloaderHouse = new GLTFLoader();
+
+      gtlloaderHouse.load(
+          houseUrl,
+          function (gltf) {
+              const lantern = gltf.scene;
+              lantern.position.copy(position);
+              lantern.scale.set(1.2, 1.2, 1.2);
+              lantern.position.y = 0.5;
+              scene.add(lantern);
+
+              const positionKey = `${position.x},${position.y},${position.z}`;
+              occupiedPositions.add(positionKey);
+              loadedModels.set(positionKey, lantern);
+              console.log("Loaded models:", loadedModels);
+              updateInformationPanel("House: A good looking house, reminds me of home. I wonder who lives here.");
+
+          },
+          function (xhr) {
+              console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+          },
+          function (error) {
+              console.log('An error happened');
+          }
+      );
+  } else {
+      console.log('This position is already occupied by a model.');
+  }
+}
+
 function load3DTree(position) {
 
   console.log('Checking position:', position);
@@ -662,11 +685,9 @@ function load3DTree(position) {
           updateInformationPanel("Tree: A normal looking Tree. It looks old, maybe a few centuries old.");
 
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -682,13 +703,13 @@ function load3DWindMill(position) {
     console.log('Skipping loading model at position 0,0,0.');
     return;
 }
-  // Check if the position is already occupied
+
   if (!isPositionOccupied(position)) {
   const gtlloaderWindMill = new GLTFLoader();
   gtlloaderWindMill.load(
-      // resource URL
+  
       './modelos/wind.glb',
-      // called when the resource is loaded
+   
       function (gltf) {
           const windmill = gltf.scene;
           windmill.position.copy(position);
@@ -702,11 +723,11 @@ function load3DWindMill(position) {
 
           updateInformationPanel("Windmill: You can hear the wind blowing around you.");
       },
-      // called while loading is progressing
+    
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      // called when loading has errors
+   
       function (error) {
           console.log('An error happened');
       }
@@ -726,10 +747,10 @@ function load3DTorii(position){
   const gtlloaderTorii = new GLTFLoader();
 
   gtlloaderTorii.load(
-    // resource URL
+
     './modelos/torii.glb',
 
-    // called when the resource is loaded
+    
     function ( gltf ) {
       const torii = gltf.scene;
       torii.position.copy(position);
@@ -744,11 +765,11 @@ function load3DTorii(position){
 
       updateInformationPanel("Torii: The japanese entrance to a sacred place. You somehow feel calmer around it.");
     },
-    // called while loading is progressing
+
     function ( xhr ) {
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     },
-    // called when loading has errors
+
     function ( error ) {
       console.log( 'An error happened' );
     }
@@ -769,10 +790,10 @@ function load3DBench(position){
   const gtlloaderBench = new GLTFLoader();
 
   gtlloaderBench.load(
-    // resource URL
+
     './modelos/bench.glb',
 
-    // called when the resource is loaded
+
     function ( gltf ) {
       const bench = gltf.scene;
       bench.position.copy(position);
@@ -788,11 +809,11 @@ function load3DBench(position){
 
       updateInformationPanel("Bench: Oh nice, a bench, my legs were starting to feel a bit tired.");
     },
-    // called while loading is progressing
+
     function ( xhr ) {
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     },
-    // called when loading has errors
+ 
     function ( error ) {
       console.log( 'An error happened' );
     }
@@ -811,10 +832,10 @@ function load3DArcade(position) {
       const gtlloaderArcade = new GLTFLoader();
 
       gtlloaderArcade.load(
-          // resource URL
+ 
           './modelos/arcadeMachine.glb',
 
-          // called when the resource is loaded
+         
           function (gltf) {
               const arcade = gltf.scene;
               arcade.position.copy(position);
@@ -829,11 +850,11 @@ function load3DArcade(position) {
 
               updateInformationPanel("Arcade: The oldschool way of playing games, my father used to play these with his friends back in the day.");
           },
-          // called while loading is progressing
+     
           function (xhr) {
               console.log((xhr.loaded / xhr.total * 100) + '% loaded');
           },
-          // called when loading has errors
+     
           function (error) {
               console.log('An error happened');
           }
@@ -853,10 +874,10 @@ function load3DPagoda(position) {
       const gtlloaderPagoda = new GLTFLoader();
 
       gtlloaderPagoda.load(
-          // resource URL
+    
           './modelos/pagoda.glb',
 
-          // called when the resource is loaded
+    
           function (gltf) {
               const pagoda = gltf.scene;
               pagoda.position.copy(position);
@@ -871,11 +892,11 @@ function load3DPagoda(position) {
 
               updateInformationPanel("Pagoda: Woah, a pagoda, its gigantic, the multiple layers are so cool!");
           },
-          // called while loading is progressing
+   
           function (xhr) {
               console.log((xhr.loaded / xhr.total * 100) + '% loaded');
           },
-          // called when loading has errors
+      
           function (error) {
               console.log('An error happened');
           }
@@ -896,10 +917,10 @@ function load3DVendingMachine(position){
   const gtlloaderVendingMachine = new GLTFLoader();
 
   gtlloaderVendingMachine.load(
-    // resource URL
+
     './modelos/vendingMachine.glb',
 
-    // called when the resource is loaded
+
     function ( gltf ) {
       const vendingMachine = gltf.scene;
       vendingMachine.position.copy(position);
@@ -915,11 +936,11 @@ function load3DVendingMachine(position){
       updateInformationPanel("Vending Machine: A vending machine, after a closer look, its filled with snacks.");
 
     },
-    // called while loading is progressing
+  
     function ( xhr ) {
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     },
-    // called when loading has errors
+  
     function ( error ) {
       console.log( 'An error happened' );
     }
@@ -928,6 +949,10 @@ function load3DVendingMachine(position){
     console.log('This position is already occupied by a model.');
   }
 }
+
+
+// ------------------------------- End try stuff out----------------------------
+
 
   function animate(){
     requestAnimationFrame(animate);
@@ -992,6 +1017,21 @@ function load3DVendingMachine(position){
     }
   }
 
+  function setupLights() {
+    const sun = new THREE.DirectionalLight(0xffffff, 1)
+    sun.position.set(20, 20, 20);
+    sun.castShadow = true;
+    sun.shadow.camera.left = -10;
+    sun.shadow.camera.right = 10;
+    sun.shadow.camera.top = 0;
+    sun.shadow.camera.bottom = -10;
+    sun.shadow.mapSize.width = 1024;
+    sun.shadow.mapSize.height = 1024;
+    sun.shadow.camera.near = 0.5;
+    sun.shadow.camera.far = 50;
+    scene.add(sun);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+  }
 
   function draw() {
     renderer.render(scene, camera.camera);

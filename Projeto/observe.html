@@ -44,8 +44,30 @@
   </div>
 
   <div id="main-menu">
+    <button id="toggleButton">Hide Tutorial</button>
     <button id="main-menu-button">Back to Main Menu</button>
   </div>
+
+  <div class="tutorial-box">
+    <p class="tutorial">Controlos:<br> A -> Andar para a esquerda<br> W -> Andar para cima <br> D -> Andar para a direita <br> S -> Andar para baixo <br>
+    Premir botão direito do rato -> Rodar camera<br>Premir roda do meio do rato -> Arrastar camera<br>Rodar roda do meio do rato -> Zoom <br> F -> Ativar e desativar Camara em Primeira pessoa</p>
+  </div>
+
+  
+
+  <script>
+    document.getElementById("toggleButton").addEventListener("click", function() {
+    var tutorialBox = document.querySelector(".tutorial-box");
+    tutorialBox.classList.toggle("hidden");
+      
+    var toggleButton = document.getElementById("toggleButton");
+    if (tutorialBox.classList.contains("hidden")) {
+        toggleButton.textContent = "Show Tutorial";
+    } else {
+        toggleButton.textContent = "Hide Tutorial";
+    }
+});
+  </script>
 
   <script>
     var backButton = document.getElementById('main-menu-button');

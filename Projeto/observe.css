@@ -634,6 +634,24 @@ html, body {
     right: 1%;
   }
   
+  .tutorial-box {
+    display: block;
+    position: fixed;
+    top: 3%;
+    right: 3%;
+    background-color: lightcyan;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid black;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin: 5px auto 0;
+}
+
+
+.hidden {
+  display: none; /* Hidden when the 'hidden' class is applied */
+}
   
   
   

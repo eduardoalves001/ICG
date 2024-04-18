@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { createCamera } from './camera.js';
 import { createAssetInstance } from './assets.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { InputController, FirstPersonCamera } from './firstPersonCamera.js';
+
 
 let rainEffect = null;
 let sakuraEffect = null; 
@@ -12,6 +14,11 @@ export function createScene() {
   const gameWindow = document.getElementById('render-target');
   const scene = new THREE.Scene();
   const camera = createCamera(gameWindow);
+
+  const FPcamera = new THREE.PerspectiveCamera();
+  const firstPersonCamera = new FirstPersonCamera(FPcamera);
+  FPcamera.position.set(1, 1, 15);
+
   const renderer = new THREE.WebGLRenderer();
   scene.background = new THREE.Color(0x87ceeb);
   renderer.setSize(gameWindow.offsetWidth, gameWindow.offsetHeight);
@@ -23,9 +30,19 @@ export function createScene() {
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
+  
+
+  document.addEventListener('keydown', (event) => {
+    firstPersonCamera.input_.onKeyDown_(event);
+  });
+  document.addEventListener('keyup', (event) => {
+      firstPersonCamera.input_.onKeyUp_(event);
+  });
+
   // Valores importantes para o tempo
   let time = 0;
 
+  let activeCamera = camera;
   let activeObject = undefined;
   let hoverObject = undefined;
 
@@ -35,12 +52,27 @@ export function createScene() {
   const moonMesh = createAssetInstance('moon', 10, 10); 
 
 
-  let starsAdded = false; // Flag to track whether stars have been added
+  let starsAdded = false; // Booleano para verificar se as estrelas foram adicionadas
+
+  function toggleCamera() {
+    console.log('Toggling camera...');
+    activeCamera = activeCamera === camera ? firstPersonCamera.camera_ : camera;
+    console.log('Active camera:', activeCamera === camera ? 'Perspective' : 'First Person');
+}
+
+  document.addEventListener('keydown', function(event) {
+    console.log('Key pressed:', event.key);
+    if (event.key === 'f') {
+        toggleCamera();
+    }
+});
+
+
 
   // ---------------------------- ADICIONAR NEVE A CAIR DURANTE A NOITE ------------------------------------------
 
   function createSnow() {
-    // Setup snow particle parameters
+    // Instanção dos parâmetros de neve
     const snowCount = 5000;
     const snowGeometry = new THREE.BufferGeometry();
     const snowMaterial = new THREE.PointsMaterial({
@@ -50,28 +82,28 @@ export function createScene() {
         opacity: 1
     });
 
-    // Create snow particles
+    // Criar particulas de neve
     const snowVertices = [];
     for (let i = 0; i < snowCount; i++) {
-        const x = Math.random() * 200 - 100; // Random x position within the scene
-        const y = Math.random() * 100 + 50;   // Initial y position above the scene
-        const z = Math.random() * 200 - 100; // Random z position within the scene
+        const x = Math.random() * 200 - 100;
+        const y = Math.random() * 100 + 50; 
+        const z = Math.random() * 200 - 100;
         snowVertices.push(x, y, z);
     }
     snowGeometry.setAttribute('position', new THREE.Float32BufferAttribute(snowVertices, 3));
     const snow = new THREE.Points(snowGeometry, snowMaterial);
     snow.userData.ignoreSelection = true;
 
-    // Update sakura animation
+    // Update à animação da neve
     function animateSnow() {
         const positions = snow.geometry.attributes.position.array;
         for (let i = 1; i < positions.length; i += 3) {
-            positions[i] -= 0.1; // Update y position to simulate snow falling
+            positions[i] -= 0.1; // Update à posição do y para simular a queda de neve
             if (positions[i] < -50) {
-                positions[i] = 100; // Reset y position if snow falls out of view
+                positions[i] = 100; //Resetar a posição da neve no caso de neve antiga sair do ecrã
             }
         }
-        snow.geometry.attributes.position.needsUpdate = true; // Update particle positions
+        snow.geometry.attributes.position.needsUpdate = true; // Update às posições das particulas
     }
     return { snow, animateSnow };
   }
@@ -80,15 +112,15 @@ export function createScene() {
 
 function startSnow() {
     if (!snowEffect) {
-      const { snow, animateSnow } = createSnow(); // Assuming createSnow returns snow and animateSnow
-      snowEffect = { snow, animateSnow }; // Assign snow and animateSnow to snowEffect
+      const { snow, animateSnow } = createSnow();
+      snowEffect = { snow, animateSnow };
       scene.add(snowEffect.snow);
     }
 }
 
 function stopSnow() {
     if (snowEffect) {
-        // Remove sakura from the scene
+        // Remover neve da scene
         scene.remove(snowEffect.snow);
         snowEffect = null;
     }
@@ -100,7 +132,7 @@ function stopSnow() {
 
 
   function createSakura() {
-    // Setup sakura particle parameters
+    // Instanciação das particulas de Sakura
     const sakuraCount = 5000;
     const sakuraGeometry = new THREE.BufferGeometry();
     const sakuraMaterial = new THREE.PointsMaterial({
@@ -110,28 +142,28 @@ function stopSnow() {
         opacity: 1
     });
 
-    // Create sakura particles
+    // Criação das particulas de Sakura
     const sakuraVertices = [];
     for (let i = 0; i < sakuraCount; i++) {
-        const x = Math.random() * 200 - 100; // Random x position within the scene
-        const y = Math.random() * 100 + 50;   // Initial y position above the scene
-        const z = Math.random() * 200 - 100; // Random z position within the scene
+        const x = Math.random() * 200 - 100; // Posição do X aleatória
+        const y = Math.random() * 100 + 50;   // Posição do y inicial, acima da scene
+        const z = Math.random() * 200 - 100; // Posição do z dentro da scene
         sakuraVertices.push(x, y, z);
     }
     sakuraGeometry.setAttribute('position', new THREE.Float32BufferAttribute(sakuraVertices, 3));
     const sakura = new THREE.Points(sakuraGeometry, sakuraMaterial);
     sakura.userData.ignoreSelection = true;
 
-    // Update sakura animation
+    // Update à animação da Sakura
     function animateSakura() {
         const positions = sakura.geometry.attributes.position.array;
         for (let i = 1; i < positions.length; i += 3) {
-            positions[i] -= 0.1; // Update y position to simulate sakura falling
+            positions[i] -= 0.1; // Update à posição do y para simular a queda de Sakura
             if (positions[i] < -50) {
-                positions[i] = 100; // Reset y position if sakura petals falls out of view
+                positions[i] = 100; //Resetar a posição das pétalas de sakura no caso de neve antiga sair do ecrã
             }
         }
-        sakura.geometry.attributes.position.needsUpdate = true; // Update particle positions
+        sakura.geometry.attributes.position.needsUpdate = true;
     }
     return { sakura, animateSakura };
   }
@@ -140,15 +172,14 @@ function stopSnow() {
 
 function startSakura() {
     if (!sakuraEffect) {
-      const { sakura, animateSakura } = createSakura(); // Assuming createSakura returns sakura and animateSakura
-      sakuraEffect = { sakura, animateSakura }; // Assign sakura and animateSakura to sakuraEffect
+      const { sakura, animateSakura } = createSakura(); 
+      sakuraEffect = { sakura, animateSakura };
       scene.add(sakuraEffect.sakura);
     }
 }
 
 function stopSakura() {
     if (sakuraEffect) {
-        // Remove sakura from the scene
         scene.remove(sakuraEffect.sakura);
         sakuraEffect = null;
     }
@@ -158,7 +189,6 @@ function stopSakura() {
   // ----------------------------- ADICIONAR CHUVA DURANTE O DIA ----------------------------------------
 
   function createRain() {
-    // Setup rain particle parameters
     const rainCount = 9000;
     const rainGeometry = new THREE.BufferGeometry();
     const rainMaterial = new THREE.PointsMaterial({
@@ -168,28 +198,26 @@ function stopSakura() {
         opacity: 1
     });
 
-    // Create rain particles
     const rainVertices = [];
     for (let i = 0; i < rainCount; i++) {
-        const x = Math.random() * 200 - 100; // Random x position within the scene
-        const y = Math.random() * 100 + 50;   // Initial y position above the scene
-        const z = Math.random() * 200 - 100; // Random z position within the scene
+        const x = Math.random() * 200 - 100; 
+        const y = Math.random() * 100 + 50;  
+        const z = Math.random() * 200 - 100; 
         rainVertices.push(x, y, z);
     }
     rainGeometry.setAttribute('position', new THREE.Float32BufferAttribute(rainVertices, 3));
     const rain = new THREE.Points(rainGeometry, rainMaterial);
     rain.userData.ignoreSelection = true;
 
-    // Update rain animation
     function animateRain() {
         const positions = rain.geometry.attributes.position.array;
         for (let i = 1; i < positions.length; i += 3) {
-            positions[i] -= 0.1; // Update y position to simulate rain falling
+            positions[i] -= 0.1; 
             if (positions[i] < -50) {
-                positions[i] = 100; // Reset y position if raindrop falls out of view
+                positions[i] = 100;
             }
         }
-        rain.geometry.attributes.position.needsUpdate = true; // Update particle positions
+        rain.geometry.attributes.position.needsUpdate = true;
     }
     return { rain, animateRain };
   }
@@ -198,15 +226,14 @@ function stopSakura() {
 
 function startRain() {
     if (!rainEffect) {
-      const { rain, animateRain } = createRain(); // Assuming createRain returns rain and animateRain
-      rainEffect = { rain, animateRain }; // Assign rain and animateRain to rainEffect
+      const { rain, animateRain } = createRain();
+      rainEffect = { rain, animateRain };
       scene.add(rainEffect.rain);
     }
 }
 
 function stopRain() {
     if (rainEffect) {
-        // Remove rain from the scene
         scene.remove(rainEffect.rain);
         rainEffect = null;
     }
@@ -233,7 +260,7 @@ function addStarsToSky() {
         const stars = new THREE.Points(starGeometry, starMaterial);
         stars.userData.ignoreSelection = true;
         scene.add(stars);
-        starsAdded = true; // Set the flag to true indicating stars have been added
+        starsAdded = true;
     }
 }
 
@@ -263,15 +290,12 @@ function addStarsToSky() {
     loadHouseModel8();
     loadHouseModel9();
 
-    // loadWall1();
-    // loadWall2();
-    // loadWall3();
-    // loadWall4();
-    // loadWall5();
-    // loadWall6();
-    // loadWall7();
+    loadLamp();
+    loadLamp1();
+    loadLamp2();
+    loadLamp3();
+
     loadWalls();
-    
     
     load3DPagoda();
     load3DTree1();
@@ -287,6 +311,25 @@ function addStarsToSky() {
     load3DTorii2();
     load3DTorii3();
 
+    loadpicnic();
+    loadpicnic1();
+
+    load3DBench();
+
+    load3DVendingMachine();
+    load3DArcade();
+
+    load3DLantern();
+    load3DLantern1();
+
+    loadStatue();
+    loadStatue1();
+
+    loadfountain();
+
+    loadpond();
+    loadbridge();
+    loadSword();
 
 
     scene.add(sunMesh);
@@ -328,54 +371,151 @@ updateBackground();
 //------------------------------ Try stuff out ---------------------------------------------
 
 
+function getMainCharacter() {
+  return new Promise((resolve, reject) => {
+      const houseUrl = './modelos/mc1.glb';
+      const gtlloaderHouse = new GLTFLoader();
 
-let selectedPosition = null; // Variable to store the selected position
-
-
-// Function to enable mode for selecting a tile
-function enableTileSelectionMode() {
-    // Add event listener to the renderer's dom element to listen for click events
-    renderer.domElement.addEventListener('click', onTileClick);
+      gtlloaderHouse.load(
+          houseUrl,
+          function (gltf) {
+              const mainCharacter = gltf.scene;
+              mainCharacter.scale.set(0.5, 0.5, 0.5);
+              mainCharacter.position.set(5, 0, 5);
+              scene.add(mainCharacter);
+              resolve(mainCharacter);
+          },
+          function (xhr) {
+              console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+          },
+          function (error) {
+              console.log('An error happened');
+              reject(error);
+          }
+      );
+  });
 }
 
-// Function to handle click event on a tile
-function onTileClick(event) {
-    // Get the mouse coordinates
-    const mouseCoords = getMouseCoordinates(event);
+getMainCharacter().then(mainCharacter => {
+  const speed = 0.2; 
 
-    // Cast a ray from the camera to the clicked position
-    raycaster.setFromCamera(mouseCoords, camera.camera);
+  let oeste;
+  let este;
+  let norte;
+  let sul;
 
-    // Find intersected objects
-    const intersects = raycaster.intersectObjects(scene.children);
+  const minX = 0;
+  const maxX = 28;
+  const minZ = 0;
+  const maxZ = 28;
 
-    // Check if any object is intersected
-    if (intersects.length > 0) {
-        // Get the position of the intersected object (tile)
-        selectedPosition = intersects[0].object.position;
-        console.log('Selected position:', selectedPosition);
-        updateInformationPanel();
-    }
-}
+  document.addEventListener('keydown', (event) => {
+      let movementDirection = new THREE.Vector3(); 
 
-// Function to get mouse coordinates relative to the renderer's dom element
-function getMouseCoordinates(event) {
-    const rect = renderer.domElement.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    return new THREE.Vector2(x, y);
-}
+      switch (event.key) {
+          case 's':
+              if (mainCharacter.position.x - speed > minX) {
+                  mainCharacter.position.x -= speed;
+                  movementDirection.x = -1; 
+                  sul = true;
+                  norte = false;
+                  oeste = false;
+                  este = false;
+              }
+              break;
+          case 'a':
+              if (mainCharacter.position.z - speed > minZ) {
+                  mainCharacter.position.z -= speed;
+                  movementDirection.z = -1; 
+                  sul = false;
+                  norte = false;
+                  oeste = true;
+                  este = false;
+              }
+              break;
+          case 'w':
+              if (mainCharacter.position.x + speed < maxX) {
+                  mainCharacter.position.x += speed;
+                  movementDirection.x = 1; 
+                  sul = false;
+                  norte = true;
+                  oeste = false;
+                  este = false;
+              }
+              break;
+          case 'd':
+              if (mainCharacter.position.z + speed < maxZ) {
+                  mainCharacter.position.z += speed;
+                  movementDirection.z = 1; 
+                  sul = false;
+                  norte = false;
+                  oeste = false;
+                  este = true;
+              }
+              break;
+      }
+      mainCharacter.lookAt(mainCharacter.position.clone().add(movementDirection));
+      firstPersonCamera.camera_.position.copy(mainCharacter.position);
+      firstPersonCamera.camera_.position.setY(1);
+      if(norte){
+        firstPersonCamera.camera_.rotation.set(0, -Math.PI/2, 0);
+      }else if(este){
+        firstPersonCamera.camera_.rotation.set(0, Math.PI, 0);
+      }else if(oeste){
+        firstPersonCamera.camera_.rotation.set(0, 0, 0);
+      }else if(sul){
+        firstPersonCamera.camera_.rotation.set(0, Math.PI/2, 0);
+      }
+
+  });
+}).catch(error => {
+  console.error('Failed to load main character:', error);
+});
 
 
-function updateInformationPanel(customString) {
-  const informationPanel = document.getElementById('info-panel');
-  if (customString) {
-      informationPanel.textContent = customString;
-  } else {
-      informationPanel.textContent = "Grass: Ah, the scent of freshly cut grass, such a nostalgic embrace.";
-  }
-}
+function loadpond() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/pond.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const pond = gltf.scene;
+               pond.scale.set(0.03, 0.003, 0.03);
+               pond.position.set(6,0,22);
+               scene.add(pond);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
 
+ function loadbridge() {
+  // Verificação, se a posição já está ocupada antes de carregar o modelo
+       const houseUrl = './modelos/bridge.glb';
+       const gtlloaderHouse = new GLTFLoader();
+ 
+       gtlloaderHouse.load(
+           houseUrl,
+           function (gltf) {
+               const bridge = gltf.scene;
+               bridge.scale.set(1.3, 1.3, 1.3);
+               bridge.position.set(6,2.3,22);
+               scene.add(bridge);
+           },
+           function (xhr) {
+               console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+           },
+           function (error) {
+               console.log('An error happened');
+           }
+       );
+ }
 
 
 function loadHouseModel1() {
@@ -614,7 +754,193 @@ function loadWall(wallPath, position, rotation, scale) {
   );
 }
 
+
+function loadLamp() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/lamp.glb',
+
+      function (gltf) {
+          const lamp = gltf.scene;
+          lamp.scale.set(0.5, 0.5, 0.5);
+          lamp.position.set(1, 1.1, 1);
+          lamp.rotation.y = -Math.PI/2;
+          scene.add(gltf.scene);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function loadLamp1() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/lamp.glb',
+
+      function (gltf) {
+          const lamp = gltf.scene;
+          lamp.scale.set(0.5, 0.5, 0.5);
+          lamp.position.set(25, 1.1, 1);
+          lamp.rotation.y = -Math.PI/2;
+          scene.add(gltf.scene);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function loadLamp2() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/lamp.glb',
+
+      function (gltf) {
+          const lamp = gltf.scene;
+          lamp.scale.set(0.5, 0.5, 0.5);
+          lamp.position.set(1, 1.1, 28);
+          lamp.rotation.y = -Math.PI/2;
+          scene.add(gltf.scene);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function loadLamp3() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/lamp.glb',
+
+      function (gltf) {
+          const lamp = gltf.scene;
+          lamp.scale.set(0.5, 0.5, 0.5);
+          lamp.position.set(25, 1.1, 28);
+          lamp.rotation.y = -Math.PI/2;
+          scene.add(gltf.scene);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+
+function loadStatue() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/statue.glb',
+
+      function (gltf) {
+          const statue = gltf.scene;
+          statue.scale.set(1, 1, 1);
+          statue.position.set(22, 0, 6);
+          statue.rotation.y = -Math.PI/2;
+          scene.add(gltf.scene);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function loadStatue1() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/statue.glb',
+
+      function (gltf) {
+          const statue = gltf.scene;
+          statue.scale.set(1, 1, 1);
+          statue.position.set(22, 0, 24);
+          statue.rotation.y = -Math.PI/2;
+          scene.add(gltf.scene);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+
+
 // LOAD ARVORES ----------------------------------------------------------------------
+
+function load3DLantern() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/lantern.glb',
+
+      function (gltf) {
+          const lantern = gltf.scene;
+          lantern.scale.set(2, 2, 2);
+          lantern.position.set(22, 1, 20);
+          scene.add(gltf.scene);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
+
+function load3DLantern1() {
+  const gtlloaderTree = new GLTFLoader();
+
+  gtlloaderTree.load(
+  
+      './modelos/lantern.glb',
+
+      function (gltf) {
+          const lantern = gltf.scene;
+          lantern.scale.set(2, 2, 2);
+          lantern.position.set(22, 1, 10);
+          scene.add(gltf.scene);
+      },
+      function (xhr) {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
+          console.log('An error happened');
+      }
+  );
+}
 
 function load3DTree1() {
   const gtlloaderTree = new GLTFLoader();
@@ -629,11 +955,9 @@ function load3DTree1() {
           tree.position.set(27, 0, 2);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -653,11 +977,9 @@ function load3DTree2() {
           tree.position.set(27, 0, 5);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -677,11 +999,9 @@ function load3DTree9() {
           tree.position.set(27, 0, 14);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -701,11 +1021,9 @@ function load3DTree3() {
           tree.position.set(27, 0, 8);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -722,11 +1040,9 @@ function load3DTree4() {
           tree.position.set(27, 0, 11);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -743,11 +1059,9 @@ function load3DTree5() {
           tree.position.set(27, 0, 27);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -764,11 +1078,9 @@ function load3DTree6() {
           tree.position.set(27, 0, 24);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -785,11 +1097,9 @@ function load3DTree7() {
           tree.position.set(27, 0, 21);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -806,34 +1116,9 @@ function load3DTree8() {
           tree.position.set(27, 0, 18);
           scene.add(gltf.scene);
       },
-      //called while loading is progressing
       function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
       },
-      //called when loading has errors
-      function (error) {
-          console.log('An error happened');
-      }
-  );
-}
-
-
-function load3DWindMill() {
-  const gtlloaderWindMill = new GLTFLoader();
-  gtlloaderWindMill.load(
-      // resource URL
-      './modelos/wind.glb',
-      // called when the resource is loaded
-      function (gltf) {
-          const windmill = gltf.scene;
-          scene.add(gltf.scene);
-          windmill.position.y = 0;
-      },
-      // called while loading is progressing
-      function (xhr) {
-          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-      },
-      // called when loading has errors
       function (error) {
           console.log('An error happened');
       }
@@ -847,10 +1132,9 @@ function load3DTorii1(){
   const gtlloaderTorii = new GLTFLoader();
 
   gtlloaderTorii.load(
-    // resource URL
+    
     './modelos/torii.glb',
 
-    // called when the resource is loaded
     function ( gltf ) {
       const torii = gltf.scene;
       torii.scale.set(2.5, 2.5, 2.5);
@@ -859,11 +1143,9 @@ function load3DTorii1(){
       scene.add( gltf.scene );
 
     },
-    // called while loading is progressing
     function ( xhr ) {
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     },
-    // called when loading has errors
     function ( error ) {
       console.log( 'An error happened' );
     }
@@ -874,10 +1156,10 @@ function load3DTorii2(){
   const gtlloaderTorii = new GLTFLoader();
 
   gtlloaderTorii.load(
-    // resource URL
+
     './modelos/torii.glb',
 
-    // called when the resource is loaded
+
     function ( gltf ) {
       const torii = gltf.scene;
       torii.scale.set(2.5, 2.5, 2.5);
@@ -886,11 +1168,11 @@ function load3DTorii2(){
       scene.add( gltf.scene );
 
     },
-    // called while loading is progressing
+   
     function ( xhr ) {
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     },
-    // called when loading has errors
+
     function ( error ) {
       console.log( 'An error happened' );
     }
@@ -901,10 +1183,10 @@ function load3DTorii3(){
   const gtlloaderTorii = new GLTFLoader();
 
   gtlloaderTorii.load(
-    // resource URL
+
     './modelos/torii.glb',
 
-    // called when the resource is loaded
+
     function ( gltf ) {
       const torii = gltf.scene;
       torii.scale.set(2.5, 2.5, 2.5);
@@ -913,29 +1195,28 @@ function load3DTorii3(){
       scene.add( gltf.scene );
 
     },
-    // called while loading is progressing
+ 
     function ( xhr ) {
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     },
-    // called when loading has errors
+   
     function ( error ) {
       console.log( 'An error happened' );
     }
   );
 }
 
-function load3DBench(position){
+function load3DBench(){
   const gtlloaderBench = new GLTFLoader();
 
   gtlloaderBench.load(
-    // resource URL
+ 
     './modelos/bench.glb',
 
     function ( gltf ) {
       const bench = gltf.scene;
-      bench.position.copy(position);
       bench.scale.set(2, 2, 2);
-      torii.position.set(15,0,15);
+      bench.position.set(13, 0, 28);
       scene.add( gltf.scene );
     },
     function ( xhr ) {
@@ -947,32 +1228,161 @@ function load3DBench(position){
   );
 }
 
-function load3DArcade(position) {
+function load3DArcade() {
     const gtlloaderArcade = new GLTFLoader();
 
     gtlloaderArcade.load(
-          // resource URL
+       
         './modelos/arcadeMachine.glb',
 
-          // called when the resource is loaded
+          
         function (gltf) {
           const arcade = gltf.scene;
-          arcade.position.copy(position);
           arcade.scale.set(0.7, 0.7, 0.7);
-          arcade.position.y = 0;
+          arcade.position.set(15, 0, 28);
+          arcade.rotation.y = Math.PI/2;
           scene.add(gltf.scene);
         },
-          // called while loading is progressing
+         
         function (xhr) {
           console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         },
-          // called when loading has errors
+        
         function (error) {
           console.log('An error happened');
         }
       );
 }
 
+function load3DArcade() {
+  const gtlloaderArcade = new GLTFLoader();
+
+  gtlloaderArcade.load(
+      
+      './modelos/arcadeMachine.glb',
+
+      
+      function (gltf) {
+        const arcade = gltf.scene;
+        arcade.scale.set(0.7, 0.7, 0.7);
+        arcade.position.set(15, 0, 28);
+        arcade.rotation.y = Math.PI/2;
+        scene.add(gltf.scene);
+      },
+       
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+     
+      function (error) {
+        console.log('An error happened');
+      }
+    );
+}
+
+function loadSword() {
+  const gtlloaderArcade = new GLTFLoader();
+
+  gtlloaderArcade.load(
+
+      './modelos/sword.glb',
+
+     
+      function (gltf) {
+        const sword = gltf.scene;
+        sword.scale.set(2, 2, 2);
+        sword.position.set(19, 0.8, 28);
+        sword.rotation.y = Math.PI;
+        scene.add(gltf.scene);
+      },
+       
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      
+      function (error) {
+        console.log('An error happened');
+      }
+    );
+}
+
+function loadfountain() {
+  const gtlloaderArcade = new GLTFLoader();
+
+  gtlloaderArcade.load(
+    
+      './modelos/fountain.glb',
+
+
+      function (gltf) {
+        const fountain = gltf.scene;
+        fountain.scale.set(2, 2, 2);
+        fountain.position.set(8, 0, 7);
+        fountain.rotation.y = Math.PI;
+        scene.add(gltf.scene);
+      },
+      
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      
+      function (error) {
+        console.log('An error happened');
+      }
+    );
+}
+
+function loadpicnic() {
+  const gtlloaderArcade = new GLTFLoader();
+
+  gtlloaderArcade.load(
+     
+      './modelos/picnic.glb',
+
+      
+      function (gltf) {
+        const picnic = gltf.scene;
+        picnic.scale.set(0.7, 0.7, 0.7);
+        picnic.position.set(13, 0, 7);
+        picnic.rotation.y = Math.PI;
+        scene.add(gltf.scene);
+      },
+      
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+   
+      function (error) {
+        console.log('An error happened');
+      }
+    );
+}
+
+function loadpicnic1() {
+  const gtlloaderArcade = new GLTFLoader();
+
+  gtlloaderArcade.load(
+   
+      './modelos/picnic.glb',
+
+       
+      function (gltf) {
+        const picnic = gltf.scene;
+        picnic.scale.set(0.7, 0.7, 0.7);
+        picnic.position.set(15, 0, 7);
+        picnic.rotation.y = Math.PI;
+        scene.add(gltf.scene);
+      },
+      
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+     
+      function (error) {
+        console.log('An error happened');
+      }
+    );
+}
 
 function load3DPagoda() {
     const gtlloaderPagoda = new GLTFLoader();
@@ -997,32 +1407,26 @@ function load3DPagoda() {
 }
 
 
-function load3DVendingMachine(position){
+function load3DVendingMachine(){
 
   const gtlloaderVendingMachine = new GLTFLoader();
 
   gtlloaderVendingMachine.load(
-    // resource URL
+
     './modelos/vendingMachine.glb',
 
-    // called when the resource is loaded
     function ( gltf ) {
       const vendingMachine = gltf.scene;
-      vendingMachine.position.copy(position);
-      vendingMachine.scale.set(0.4, 0.4, 0.4);
-      vendingMachine.position.y = 0;
+      vendingMachine.scale.set(0.5, 0.5, 0.5);
+      vendingMachine.position.set(17, 0, 28);
+      vendingMachine.rotation.y = Math.PI;
       scene.add( gltf.scene );
-
-      const positionKey = `${position.x},${position.y},${position.z}`;
-      occupiedPositions.add(positionKey);
-      loadedModels.set(positionKey, vendingMachine);
-      console.log("Loaded models:", loadedModels);
     },
-    // called while loading is progressing
+
     function ( xhr ) {
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     },
-    // called when loading has errors
+ 
     function ( error ) {
       console.log( 'An error happened' );
     }
@@ -1032,13 +1436,62 @@ function load3DVendingMachine(position){
 
 // ------------------------------- End try stuff out----------------------------
 
-
+  let lightsCreated = false;
+  let light;
+  let light1;
+  let light2;
+  let light3;
+  let light4;
+  let light5;
   function animate(){
     requestAnimationFrame(animate);
+
 
     // Este código serve para esconder a lua ou o sol quando este não está por cima do mundo.
     sunMesh.visible = sunMesh.position.y >= 0;
     moonMesh.visible = moonMesh.position.y >= 0;
+
+    if(!lightsCreated && !sunMesh.visible){
+      light = new THREE.PointLight(0xff6600, 3, 10, 3); 
+      light.position.set(22, 1, 10);
+      scene.add(light);
+    
+      light1 =new THREE.PointLight(0xff6600, 3, 10, 3); 
+      light1.position.set(22, 1, 20);
+      scene.add(light1);
+      
+      //lamp
+      light2 = new THREE.PointLight(0xff6600, 3, 10, 3); 
+      light2.position.set(1, 1.1, 1);
+      scene.add(light2);
+    
+      light3 =new THREE.PointLight(0xff6600, 3, 10, 3); 
+      light3.position.set(25, 1.1, 1);
+      scene.add(light3);
+
+      light4 = new THREE.PointLight(0xff6600, 3, 10, 3); 
+      light4.position.set(25, 1.1, 28);
+      scene.add(light4);
+    
+      light5 =new THREE.PointLight(0xff6600, 3, 10, 3); 
+      light5.position.set(1, 1.1, 28);
+      scene.add(light5);
+
+      lightsCreated = true;
+    }
+
+    if (lightsCreated && sunMesh.visible) {
+ 
+      scene.remove(light);
+      scene.remove(light1);
+      scene.remove(light2);
+      scene.remove(light3);
+      scene.remove(light4);
+      scene.remove(light5);
+
+   
+      lightsCreated = false;
+  }
 
     //time += 0.0005;
     time += 0.001;
@@ -1068,8 +1521,7 @@ function load3DVendingMachine(position){
     }
 
     updateBackground();
-
-    renderer.render(scene, camera.camera);
+    
   }
 
   animate();
@@ -1111,7 +1563,11 @@ function load3DVendingMachine(position){
   }
 
   function draw() {
-    renderer.render(scene, camera.camera);
+    if (activeCamera === camera) {
+      renderer.render(scene, camera.camera);
+  } else if (activeCamera === FPcamera) {
+      renderer.render(scene, FPcamera);
+  }
   }
 
   function start() {
@@ -1171,7 +1627,7 @@ function load3DVendingMachine(position){
       object.material.emissive?.setHex(color);
     }
   }  
-  
+    
   return {
     camera,
     initialize,
