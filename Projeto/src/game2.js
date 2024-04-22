@@ -109,10 +109,9 @@ export function createGame() {
   function placeBuilding(tile) {
     const buildingFunction = buildingFactory[activeToolId];
     if (typeof buildingFunction === 'function') {
-      tile.building = buildingFunction(); // Create building object
-      // Set initial height to 1
+      tile.building = buildingFunction();
       tile.building.height = 1;
-      scene.update(city); // Update scene
+      scene.update(city);
     } else if(activeToolId === 'upgrade') {
       console.log("Grass cannot be upgraded");
     } else {

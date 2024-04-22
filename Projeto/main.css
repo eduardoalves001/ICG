@@ -397,14 +397,6 @@ h1 {
 
 
 
-
-
-
-
-
-
-
-
 .ui-container {
   background-color: #33333355;
   padding: 16px;
@@ -415,8 +407,6 @@ h1 {
   height: 36px;
   pointer-events: none;
 }
-
-/* TITLE BAR */
 
 #title-bar {
   position: fixed;
@@ -446,8 +436,6 @@ h1 {
   margin-left: 8px;
 }
 
-/* INFO OVERLAY */
-
 #info-overlay {
   position: fixed;
   top: 0px;
@@ -471,7 +459,7 @@ h1 {
   top: 12%;
   right: 0;
   transform: translateY(-50%);
-  margin-right: 16px; /* Adjust as needed */
+  margin-right: 16px;
   padding: 12px;
   width: 200px;
   background-color: white;
@@ -492,14 +480,14 @@ h1 {
 
 #weather-panel {
   position: fixed;
-  color: black; /* Set the text color to black */
-  bottom: 20px; /* Adjust the distance from the bottom */
+  color: black; 
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  margin-right: 16px; /* Adjust as needed */
+  margin-right: 16px; 
   padding: 10px 20px;
   width: 200px;
-  background-color: white; /* Set the background color to white */
+  background-color: white; 
   border-radius: 10px;
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 20%);
 }
@@ -508,12 +496,12 @@ h1 {
   margin: 0;
   font-size: 18px;
   font-weight: bold;
-  color: black; /* Set the text color to black */
+  color: black;
 }
 
 #season-buttons {
   position: absolute;
-  bottom: 25px; /* Adjust the distance from the bottom */
+  bottom: 25px; 
   left: 50%;
   transform: translateX(-50%);
 }
@@ -528,7 +516,7 @@ h1 {
 
 #weather-panel {
   position: absolute;
-  bottom: 105px; /* Adjust the distance from the bottom */
+  bottom: 105px; 
   left: 50%;
   transform: translateX(-50%);
   margin-right: 16px;
@@ -561,82 +549,82 @@ h1 {
 
 .city-name-box {
   position: fixed;
-  top: 2%; /* Adjust the distance from the bottom */
-  right: 4.5%; /* Adjust the distance from the right */
-  z-index: 9999; /* Ensure the box is above other content */
-  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
-  padding: 5px; /* Add padding */
-  border-radius: 5px; /* Add border radius */
-  max-width: 200px; /* Set maximum width */
-  overflow-wrap: break-word; /* Allow text to wrap within the box */
+  top: 2%; 
+  right: 4.5%; 
+  z-index: 9999; 
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px; 
+  border-radius: 5px; 
+  max-width: 200px; 
+  overflow-wrap: break-word;
 }
 
 #city-name {
-  font-size: 14px; /* Adjust the font size */
-  max-width: 180px; /* Set maximum width for the city name */
-  white-space: nowrap; /* Prevent the city name from wrapping */
-  overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+  font-size: 14px; 
+  max-width: 180px; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
 }
 
 #rotate-button{
   position: fixed;
-  bottom: 60px; /* Adjust the distance from the bottom */
-  right: 20px; /* Adjust the distance from the right */
-  z-index: 9999; /* Ensure the box is above other content */
-  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
-  padding: 5px; /* Add padding */
-  border-radius: 5px; /* Add border radius */
-  max-width: 200px; /* Set maximum width */
-  overflow-wrap: break-word; /* Allow text to wrap within the box */
+  bottom: 60px; 
+  right: 20px; 
+  z-index: 9999; 
+  background-color: rgba(255, 255, 255, 0.8); 
+  padding: 5px; 
+  border-radius: 5px; 
+  max-width: 200px;
+  overflow-wrap: break-word;
 }
 
 #expandRight{
   position: fixed;
-  bottom: 120px; /* Adjust the distance from the bottom */
-  right: 20px; /* Adjust the distance from the right */
-  z-index: 9999; /* Ensure the box is above other content */
-  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
-  padding: 5px; /* Add padding */
-  border-radius: 5px; /* Add border radius */
-  max-width: 200px; /* Set maximum width */
-  overflow-wrap: break-word; /* Allow text to wrap within the box */
+  bottom: 120px; 
+  right: 20px; 
+  z-index: 9999; 
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+  border-radius: 5px; 
+  max-width: 200px; 
+  overflow-wrap: break-word; /
 }
 
 #expandDown{
   position: fixed;
-  bottom: 160px; /* Adjust the distance from the bottom */
-  right: 20px; /* Adjust the distance from the right */
-  z-index: 9999; /* Ensure the box is above other content */
-  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
-  padding: 5px; /* Add padding */
-  border-radius: 5px; /* Add border radius */
-  max-width: 200px; /* Set maximum width */
-  overflow-wrap: break-word; /* Allow text to wrap within the box */
+  bottom: 160px;
+  right: 20px;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px; 
+  border-radius: 5px; 
+  max-width: 200px; 
+  overflow-wrap: break-word;
 }
 
 #slide-right-button{
   position: fixed;
-  bottom: 1%; /* Adjust the distance from the bottom */
-  left: 1%; /* Adjust the distance from the right */
-  z-index: 9999; /* Ensure the box is above other content */
-  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
-  padding: 5px; /* Add padding */
-  border-radius: 5px; /* Add border radius */
-  max-width: 200px; /* Set maximum width */
-  overflow-wrap: break-word; /* Allow text to wrap within the box */
+  bottom: 1%;
+  left: 1%; 
+  z-index: 9999; 
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+  border-radius: 5px;
+  max-width: 200px;
+  overflow-wrap: break-word; 
 }
 
 #slide-left-button{
   position: fixed;
-  bottom: 1%; /* Adjust the distance from the bottom */
-  left: 5%; /* Adjust the distance from the right */
-  z-index: 9999; /* Ensure the box is above other content */
-  background-color: rgba(255, 255, 255, 0.8); /* Add background color */
-  padding: 5px; /* Add padding */
-  border-radius: 5px; /* Add border radius */
-  max-width: 200px; /* Set maximum width */
-  overflow-wrap: break-word; /* Allow text to wrap within the box */
+  bottom: 1%;
+  left: 5%; 
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 5px; 
+  border-radius: 5px; 
+  max-width: 200px; 
+  overflow-wrap: break-word;
 }
 
 #main-menu {

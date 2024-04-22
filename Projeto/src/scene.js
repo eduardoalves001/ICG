@@ -637,7 +637,7 @@ function loadLanternModel(position) {
               occupiedPositions.add(positionKey);
               loadedModels.set(positionKey, lantern);
               console.log("Loaded models:", loadedModels);
-              updateInformationPanel("House: A good looking house, reminds me of home. I wonder who lives here.");
+              updateInformationPanel("Red Latern: A traditional Lantern. I heard it's used in some festivals around the world.");
 
           },
           function (xhr) {

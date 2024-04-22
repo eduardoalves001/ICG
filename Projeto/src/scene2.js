@@ -399,10 +399,10 @@ function getMainCharacter() {
 getMainCharacter().then(mainCharacter => {
   const speed = 0.2; 
 
-  let oeste;
-  let este;
-  let norte;
-  let sul;
+  let oeste = false;
+  let este = true;
+  let norte = false;
+  let sul = false;
 
   const minX = 0;
   const maxX = 28;
