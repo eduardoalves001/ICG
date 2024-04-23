@@ -4,7 +4,6 @@ import { createAssetInstance } from './assets.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { InputController, FirstPersonCamera } from './firstPersonCamera.js';
 
-
 let rainEffect = null;
 let sakuraEffect = null; 
 let snowEffect = null;
@@ -373,16 +372,52 @@ updateBackground();
 
 function getMainCharacter() {
   return new Promise((resolve, reject) => {
-      const houseUrl = './modelos/mc1.glb';
+      let modelUrl;
       const gtlloaderHouse = new GLTFLoader();
 
+      let characterName = localStorage.getItem('selectedCharacter');
+
+      switch (characterName) {
+        case 'Percival':
+            modelUrl = './modelos/percival.glb';
+            break;
+        case 'Morgana':
+            modelUrl = './modelos/mc1.glb';
+            break;
+        case 'Arthur':
+              modelUrl = './modelos/arthur.glb';
+              break;
+        case 'Merlin':
+              modelUrl = './modelos/merlin.glb';
+              break;
+        default:
+              modelUrl = './modelos/percival.glb';
+              break;
+    }
+
       gtlloaderHouse.load(
-          houseUrl,
+          modelUrl,
           function (gltf) {
+
               const mainCharacter = gltf.scene;
-              mainCharacter.scale.set(0.5, 0.5, 0.5);
+
+              if(characterName === 'Percival'){
+                mainCharacter.scale.set(0.07, 0.07, 0.07);
+              }else if(characterName === 'Arthur'){
+                mainCharacter.scale.set(0.5, 0.5, 0.5);
+              }else if(characterName === 'Merlin'){
+                mainCharacter.scale.set(0.3, 0.3, 0.3);
+              }else if(characterName === 'Morgana'){
+                mainCharacter.scale.set(0.5, 0.5, 0.5);
+              }else{
+                mainCharacter.scale.set(0.07, 0.07, 0.07);
+              }
+                
+  
+
               mainCharacter.position.set(5, 0, 5);
               scene.add(mainCharacter);
+              console.log(characterName); // Utilizing characterName
               resolve(mainCharacter);
           },
           function (xhr) {
