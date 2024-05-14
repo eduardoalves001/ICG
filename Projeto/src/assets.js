@@ -143,7 +143,6 @@ const assets = {
 
 function createZoneMesh(x, y, data) {
   const nomeTextura = data.type + data.style;
-
   const texturaCima = receberTexturaCima();
   const texturaLado = receberTexturaLado(nomeTextura);
 

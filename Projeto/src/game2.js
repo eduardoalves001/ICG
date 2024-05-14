@@ -9,11 +9,14 @@ export function createGame() {
   let selectedControl = document.getElementById('button-select');
   let activeToolId = 'select';
 
+  // constante de criação da scene
   const scene = createScene();
-  const city = createCity(30);
+   // constante de criação da cidade
+  const city = createCity(30);// A cidade é criada neste jogo com um tamanho de 30, ou seja é um array de duas dimensoões 30 por 30.
 
   scene.initialize(city);
 
+  // Event listeners importantes para o modo de jogo
   document.addEventListener('wheel', scene.camera.onMouseScroll, false);
   document.addEventListener('mousedown', onMouseDown, false);
   document.addEventListener('mousemove', onMouseMove, false);
@@ -69,14 +72,15 @@ export function createGame() {
     const { x, y } = object.userData;
     const tile = city.tiles[x][y];
 
+    // efeito de seleção
     if (activeToolId === 'select') {
       scene.setActiveObject(object);
       // updateInfoPanel(tile);
-    } else if (activeToolId === 'bulldoze') {
+    } else if (activeToolId === 'bulldoze') { //efeito de destruir meshes que estão presentes no tile
       bulldoze(tile);
     } else if (!tile.building) {
       placeBuilding(tile);
-    } else if (activeToolId === 'upgrade'){
+    } else if (activeToolId === 'upgrade'){ // efeito que permite dar upgrade de forma a crescer os muros 
       upgradeBuilding(tile);
     }
   }
@@ -89,16 +93,16 @@ export function createGame() {
         tile.building.updated = true;
         scene.update(city);
       } else {
-        console.log("Maximum height reached.");
+        console.log("Maximum height reached."); // No caso de atingir a altura máxima
       }
     } else if (!tile.building) {
-      console.log("No building to upgrade.");
+      console.log("No building to upgrade."); // No caso o botão de upgrade não interagir com uma estrutra
     } else {
-      console.log("Cannot upgrade road.");
+      console.log("Cannot upgrade.");
     }
   }
 
-
+  // Função responsável por apagar a informação presente em uma telha
   function bulldoze(tile) {
     console.log(activeToolId);
     tile.building = undefined;
